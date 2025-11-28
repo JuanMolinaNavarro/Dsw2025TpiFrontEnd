@@ -3,27 +3,27 @@ import AuthModal from '../../auth/components/AuthModal';
 
 /**
  * Componente que muestra una tarjeta individual de producto
- * Incluye imagen, nombre, precio, controles de cantidad y botón para agregar al carrito
- * 
+ * Incluye imagen, nombre, precio, controles de cantidad y botA3n para agregar al carrito
+ *
  * @component
  * @param {object} product - Objeto del producto con propiedades: id, name, currentUnitPrice, imageUrl, stockQuantity
  * @returns {JSX.Element} Tarjeta del producto con controles de compra
  */
 function ProductCard({ product }) {
   // Estado para almacenar la cantidad de unidades que quiere comprar el usuario
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   
-  // Estado para mostrar un mensaje de confirmación al agregar al carrito
+  // Estado para mostrar un mensaje de confirmaciA3n al agregar al carrito
   const [showSuccess, setShowSuccess] = useState(false);
   
-  // Estado para mostrar el modal de autenticación
+  // Estado para mostrar el modal de autenticaciA3n
   const [showAuthModal, setShowAuthModal] = useState(false);
   
-  // Obtenemos el token del localStorage para saber si el usuario está autenticado
+  // Obtenemos el token del localStorage para saber si el usuario estA� autenticado
   const token = localStorage.getItem('token');
 
   /**
-   * Maneja el clic en el botón "-" para disminuir la cantidad
+   * Maneja el clic en el botA3n "-" para disminuir la cantidad
    * Asegura que la cantidad no sea menor a 0
    */
   const handleDecrease = () => {
@@ -33,7 +33,7 @@ function ProductCard({ product }) {
   };
 
   /**
-   * Maneja el clic en el botón "+" para aumentar la cantidad
+   * Maneja el clic en el botA3n "+" para aumentar la cantidad
    * Valida que no exceda el stock disponible
    */
   const handleIncrease = () => {
@@ -45,12 +45,12 @@ function ProductCard({ product }) {
 
   /**
    * Maneja el cambio del input directo de cantidad
-   * Solo permite números y respeta los límites de 0 y stock disponible
+   * Solo permite nA�meros y respeta los lA-mites de 0 y stock disponible
    */
   const handleQuantityChange = (e) => {
     let value = parseInt(e.target.value) || 0;
     
-    // Validar que esté entre 0 y el stock disponible
+    // Validar que estAc entre 0 y el stock disponible
     if (value < 0) value = 0;
     if (value > product.stockQuantity) value = product.stockQuantity;
     
@@ -60,10 +60,10 @@ function ProductCard({ product }) {
   /**
    * Agrega el producto al carrito de compras
    * Guarda los datos en localStorage bajo la clave "cart"
-   * Requiere que el usuario esté autenticado
+   * Requiere que el usuario estAc autenticado
    */
   const handleAddToCart = () => {
-    // Validar que el usuario esté autenticado
+    // Validar que el usuario estAc autenticado
     if (!token) {
       setShowAuthModal(true);
       return;
@@ -75,10 +75,10 @@ function ProductCard({ product }) {
       return;
     }
 
-    // Obtenemos el carrito actual del localStorage (o un array vacío si no existe)
+    // Obtenemos el carrito actual del localStorage (o un array vacA-o si no existe)
     const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
     
-    // Buscamos si el producto ya está en el carrito
+    // Buscamos si el producto ya estA� en el carrito
     const existingItem = existingCart.find(item => item.id === product.id);
 
     if (existingItem) {
@@ -95,7 +95,7 @@ function ProductCard({ product }) {
     // Guardamos el carrito actualizado en localStorage
     localStorage.setItem('cart', JSON.stringify(existingCart));
     
-    // Mostramos un mensaje de éxito
+    // Mostramos un mensaje de Acxito
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 2000);
     
@@ -105,24 +105,24 @@ function ProductCard({ product }) {
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden">
-        {/* Sección de imagen del producto */}
-        <div className="bg-gray-200 h-48 overflow-hidden flex items-center justify-center">
+      <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden max-w-xs mx-auto">
+        {/* SecciA3n de imagen del producto */}
+        <div className="bg-gray-200 aspect-square overflow-hidden flex items-center justify-center">
           {product.imageUrl ? (
             <img 
               src={product.imageUrl} 
               alt={product.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           ) : (
             // Imagen de placeholder si no hay imagen disponible
-            <div className="text-gray-400 text-center">
+            <div className="text-gray-400 text-center w-full h-full flex flex-col items-center justify-center">
               <p>Sin imagen</p>
             </div>
           )}
         </div>
 
-        {/* Sección de información del producto */}
+        {/* SecciA3n de informaciA3n del producto */}
         <div className="p-4">
           {/* Nombre del producto */}
           <h3 className="text-gray-900 font-semibold text-lg mb-1 line-clamp-2">
@@ -134,7 +134,7 @@ function ProductCard({ product }) {
             ${product.currentUnitPrice.toFixed(2)}
           </p>
 
-          {/* Información de stock */}
+          {/* InformaciA3n de stock */}
           {product.stockQuantity > 0 ? (
             <p className="text-green-600 text-sm font-medium mb-3">
               Stock disponible: {product.stockQuantity}
@@ -147,14 +147,14 @@ function ProductCard({ product }) {
 
           {/* Controles de cantidad */}
           <div className="flex items-center gap-2 mb-3">
-            {/* Botón disminuir */}
+            {/* BotA3n disminuir */}
             <button 
               onClick={handleDecrease}
               disabled={quantity === 0 || product.stockQuantity === 0}
               className="w-10 h-10 border border-gray-300 rounded flex items-center justify-center 
                          hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
-              −
+              -
             </button>
 
             {/* Input de cantidad */}
@@ -167,7 +167,7 @@ function ProductCard({ product }) {
                          disabled:bg-gray-100 disabled:cursor-not-allowed"
             />
 
-            {/* Botón aumentar */}
+            {/* BotA3n aumentar */}
             <button 
               onClick={handleIncrease}
               disabled={quantity >= product.stockQuantity || product.stockQuantity === 0}
@@ -178,7 +178,7 @@ function ProductCard({ product }) {
             </button>
           </div>
 
-          {/* Botón agregar al carrito */}
+          {/* BotA3n agregar al carrito */}
           <button 
             onClick={handleAddToCart}
             disabled={quantity === 0 || product.stockQuantity === 0}
@@ -188,16 +188,16 @@ function ProductCard({ product }) {
             Agregar
           </button>
 
-          {/* Mensaje de éxito */}
+          {/* Mensaje de Acxito */}
           {showSuccess && (
             <p className="text-green-600 text-sm text-center mt-2 font-medium">
-              ✓ Agregado al carrito
+              �o" Agregado al carrito
             </p>
           )}
         </div>
       </div>
 
-      {/* Modal de autenticación - se muestra cuando el usuario intenta agregar sin estar autenticado */}
+      {/* Modal de autenticaciA3n - se muestra cuando el usuario intenta agregar sin estar autenticado */}
       {showAuthModal && (
         <AuthModal 
           onClose={() => setShowAuthModal(false)}

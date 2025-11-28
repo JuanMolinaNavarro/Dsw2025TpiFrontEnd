@@ -17,6 +17,7 @@ function EditProductModal({ product, onClose, onSuccess }) {
       internalCode: product.internalCode || '',
       currentUnitPrice: product.currentUnitPrice || 0,
       stockQuantity: product.stockQuantity || 0,
+      imageUrl: product.imageUrl || '',
     },
   });
 
@@ -26,7 +27,7 @@ function EditProductModal({ product, onClose, onSuccess }) {
 
   const skuValue = watch('sku');
 
-  // Manejar envío del formulario
+  // Manejar envA-o del formulario
   const onSubmit = async (data) => {
     try {
       setLoading(true);
@@ -67,7 +68,7 @@ function EditProductModal({ product, onClose, onSuccess }) {
               className='text-gray-400 hover:text-gray-600 text-2xl'
               aria-label='Cerrar'
             >
-              ×
+              A-
             </button>
           </div>
         </div>
@@ -83,7 +84,7 @@ function EditProductModal({ product, onClose, onSuccess }) {
 
           {success && (
             <div className='p-3 bg-green-100 text-green-800 rounded border border-green-300 text-sm'>
-              ✓ Producto actualizado correctamente
+              �o" Producto actualizado correctamente
             </div>
           )}
 
@@ -91,7 +92,7 @@ function EditProductModal({ product, onClose, onSuccess }) {
           <div>
             <label className='block text-sm font-semibold mb-1'>
               SKU* 
-              <span className='text-xs text-gray-500 ml-2'>(MAYÚSCULAS, números y guiones)</span>
+              <span className='text-xs text-gray-500 ml-2'>(MAYAsSCULAS, nA�meros y guiones)</span>
             </label>
             <input
               type='text'
@@ -100,12 +101,12 @@ function EditProductModal({ product, onClose, onSuccess }) {
                 minLength: { value: 3, message: 'SKU debe tener al menos 3 caracteres' },
                 maxLength: { value: 50, message: 'SKU no puede exceder 50 caracteres' },
                 pattern: {
-                  value: /^[A-Z0-9\-]*$/,
-                  message: 'SKU solo puede contener MAYÚSCULAS, números y guiones',
+                  value: /^[A-Z0-9\\-]*$/,
+                  message: 'SKU solo puede contener MAYAsSCULAS, nA�meros y guiones',
                 },
               })}
               onChange={(e) => {
-                // Convertir a mayúsculas automáticamente
+                // Convertir a mayA�sculas automA�ticamente
                 e.target.value = e.target.value.toUpperCase();
               }}
               disabled={loading || success}
@@ -113,8 +114,8 @@ function EditProductModal({ product, onClose, onSuccess }) {
               placeholder='Ej: PROD-001'
             />
             {errors.sku && <span className='text-red-600 text-sm'>{errors.sku.message}</span>}
-            {skuValue && !/^[A-Z0-9\-]*$/.test(skuValue) && (
-              <span className='text-orange-600 text-xs'>⚠ Se convertirá a mayúsculas al guardar</span>
+            {skuValue && !/^[A-Z0-9\\-]*$/.test(skuValue) && (
+              <span className='text-orange-600 text-xs'>�s� Se convertirA� a mayA�sculas al guardar</span>
             )}
           </div>
 
@@ -135,15 +136,15 @@ function EditProductModal({ product, onClose, onSuccess }) {
             {errors.name && <span className='text-red-600 text-sm'>{errors.name.message}</span>}
           </div>
 
-          {/* Código Interno */}
+          {/* CA3digo Interno */}
           <div>
-            <label className='block text-sm font-semibold mb-1'>Código Interno*</label>
+            <label className='block text-sm font-semibold mb-1'>CA3digo Interno*</label>
             <input
               type='text'
               {...register('internalCode', {
-                required: 'Código Interno es obligatorio',
-                minLength: { value: 1, message: 'Código Interno es obligatorio' },
-                maxLength: { value: 50, message: 'Código Interno no puede exceder 50 caracteres' },
+                required: 'CA3digo Interno es obligatorio',
+                minLength: { value: 1, message: 'CA3digo Interno es obligatorio' },
+                maxLength: { value: 50, message: 'CA3digo Interno no puede exceder 50 caracteres' },
               })}
               disabled={loading || success}
               className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
@@ -152,19 +153,34 @@ function EditProductModal({ product, onClose, onSuccess }) {
             {errors.internalCode && <span className='text-red-600 text-sm'>{errors.internalCode.message}</span>}
           </div>
 
-          {/* Descripción */}
+          {/* DescripciA3n */}
           <div>
-            <label className='block text-sm font-semibold mb-1'>Descripción</label>
+            <label className='block text-sm font-semibold mb-1'>DescripciA3n</label>
             <textarea
               {...register('description', {
-                maxLength: { value: 250, message: 'Descripción no puede exceder 250 caracteres' },
+                maxLength: { value: 250, message: 'DescripciA3n no puede exceder 250 caracteres' },
               })}
               disabled={loading || success}
               className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
-              placeholder='Descripción del producto'
+              placeholder='DescripciA3n del producto'
               rows='3'
             />
             {errors.description && <span className='text-red-600 text-sm'>{errors.description.message}</span>}
+          </div>
+
+          {/* URL de imagen */}
+          <div>
+            <label className='block text-sm font-semibold mb-1'>URL de imagen</label>
+            <input
+              type='url'
+              {...register('imageUrl', {
+                maxLength: { value: 500, message: 'La URL es demasiado larga' },
+              })}
+              disabled={loading || success}
+              className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
+              placeholder='https://...'
+            />
+            {errors.imageUrl && <span className='text-red-600 text-sm'>{errors.imageUrl.message}</span>}
           </div>
 
           {/* Precio */}
@@ -225,3 +241,4 @@ function EditProductModal({ product, onClose, onSuccess }) {
 }
 
 export default EditProductModal;
+

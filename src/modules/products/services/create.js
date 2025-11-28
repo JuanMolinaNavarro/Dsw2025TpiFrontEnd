@@ -8,5 +8,6 @@ export const createProduct = async (formData) => {
     description: formData.description,
     currentUnitPrice: formData.price,
     stockQuantity: formData.stock,
+    imageUrl: formData.imageUrl || null,
   });
 };

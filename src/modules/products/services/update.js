@@ -21,6 +21,7 @@ export const updateProduct = async (id, formData) => {
       description: (formData.description || '').trim() || null,
       currentUnitPrice: Number(formData.currentUnitPrice) || 0,
       stockQuantity: Number(formData.stockQuantity) || 0,
+      imageUrl: (formData.imageUrl || '').trim() || null,
     });
 
     return {
