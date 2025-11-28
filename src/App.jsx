@@ -2,9 +2,11 @@ import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './modules/auth/context/AuthProvider';
 import LoginPage from './modules/auth/pages/LoginPage';
 import Dashboard from './modules/templates/components/Dashboard';
+import AdminHome from './modules/templates/pages/AdminHome';
 import ProtectedRoute from './modules/auth/components/ProtectedRoute';
 import ListOrdersPage from './modules/orders/pages/ListOrdersPage';
 import CartPage from './modules/orders/pages/CartPage';
+import OrdersHistoryPage from './modules/orders/pages/OrdersHistoryPage';
 import Home from './modules/home/pages/Home';
 import ListProductsPage from './modules/products/pages/ListProductsPage';
 import CreateProductPage from './modules/products/pages/CreateProductPage';
@@ -20,6 +22,10 @@ function App() {
       element: <CartPage />,
     },
     {
+      path: '/orders',
+      element: <OrdersHistoryPage />,
+    },
+    {
       path: '/login',
       element: <LoginPage />,
     },
@@ -33,7 +39,7 @@ function App() {
       children: [
         {
           path: '/admin/home',
-          element: <Home />,
+          element: <AdminHome />,
         },
         {
           path: '/admin/products',

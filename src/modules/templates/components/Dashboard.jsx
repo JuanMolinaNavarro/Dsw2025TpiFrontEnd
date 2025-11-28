@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../../auth/hook/useAuth';
 import Button from '../../shared/components/Button';
 
@@ -7,8 +7,18 @@ function Dashboard() {
   const [openMenu, setOpenMenu] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { singout } = useAuth();
+
+  /**
+   * Efecto que redirige a /admin/home cuando se carga /admin
+   */
+  useEffect(() => {
+    if (location.pathname === '/admin') {
+      navigate('/admin/home');
+    }
+  }, [location.pathname, navigate]);
 
   const logout = () => {
     singout();
@@ -54,7 +64,7 @@ function Dashboard() {
           sm:col-span-2
         "
       >
-        <span>Mi Dashboard</span>
+        <h1 className="text-2xl font-bold text-gray-900">Panel Administrativo</h1>
         {renderLogoutButton()}
         <button
           className="

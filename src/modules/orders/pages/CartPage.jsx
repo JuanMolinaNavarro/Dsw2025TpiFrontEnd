@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../shared/components/Header';
-import { createOrder } from '../services/orderService';
 import AuthModal from '../../auth/components/AuthModal';
+import CheckoutModal from '../components/CheckoutModal';
 import useAuth from '../../auth/hook/useAuth';
 
 /**
@@ -23,6 +23,9 @@ function CartPage() {
   
   // Estado para mostrar el modal de autenticación
   const [showAuthModal, setShowAuthModal] = useState(false);
+  
+  // Estado para mostrar el modal de checkout
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   
   // Estado para el estado de carga durante el checkout
   const [loading, setLoading] = useState(false);
@@ -135,9 +138,10 @@ function CartPage() {
   };
 
   /**
-   * Maneja el checkout y la creación de la orden
+   * Maneja el clic en el botón "Finalizar Compra"
+   * Valida que hay items y muestra el modal de checkout
    */
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     // Validar que hay items en el carrito
     if (cartItems.length === 0) {
       setError('El carrito está vacío');
@@ -150,37 +154,26 @@ function CartPage() {
       return;
     }
 
-    try {
-      // Mostramos el indicador de carga
-      setLoading(true);
-      setError(null);
+    // Si el usuario está autenticado, mostramos el modal de checkout
+    setShowCheckoutModal(true);
+  };
 
-      // Llamamos al servicio para crear la orden
-      const { data, error: orderError } = await createOrder(cartItems);
+  /**
+   * Maneja el éxito de la orden
+   * Muestra confirmación y redirige a la página principal
+   */
+  const handleOrderSuccess = (orderData) => {
+    setOrderConfirmation(orderData);
+    setShowCheckoutModal(false);
+    
+    // Limpiamos el carrito
+    setCartItems([]);
+    localStorage.removeItem('cart');
 
-      // Si hay un error, lo mostramos
-      if (orderError) {
-        setError(orderError);
-        return;
-      }
-
-      // Si es exitoso, mostramos la confirmación
-      setOrderConfirmation(data);
-      
-      // Limpiamos el carrito
-      setCartItems([]);
-      localStorage.removeItem('cart');
-
-      // Redirigimos después de 3 segundos
-      setTimeout(() => {
-        navigate('/');
-      }, 3000);
-    } catch (err) {
-      setError('Error inesperado al crear la orden');
-      console.error('Unexpected error:', err);
-    } finally {
-      setLoading(false);
-    }
+    // Redirigimos después de 3 segundos
+    setTimeout(() => {
+      navigate('/');
+    }, 3000);
   };
 
   /**
@@ -400,6 +393,15 @@ function CartPage() {
       {/* Modal de autenticación */}
       {showAuthModal && (
         <AuthModal onClose={() => setShowAuthModal(false)} />
+      )}
+
+      {/* Modal de checkout */}
+      {showCheckoutModal && (
+        <CheckoutModal 
+          cartItems={cartItems}
+          onClose={() => setShowCheckoutModal(false)}
+          onOrderSuccess={handleOrderSuccess}
+        />
       )}
     </div>
   );

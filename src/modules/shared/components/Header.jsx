@@ -90,6 +90,14 @@ function Header({ onSearch }) {
                 >
                   Carrito de compras
                 </a>
+                {token && (
+                  <a 
+                    href="/orders" 
+                    className="text-gray-700 hover:text-gray-900 font-medium transition"
+                  >
+                    Mis Órdenes
+                  </a>
+                )}
               </nav>
             </div>
 
