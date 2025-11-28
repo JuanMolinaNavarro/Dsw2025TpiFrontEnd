@@ -4,6 +4,7 @@ import LoginPage from './modules/auth/pages/LoginPage';
 import Dashboard from './modules/templates/components/Dashboard';
 import ProtectedRoute from './modules/auth/components/ProtectedRoute';
 import ListOrdersPage from './modules/orders/pages/ListOrdersPage';
+import CartPage from './modules/orders/pages/CartPage';
 import Home from './modules/home/pages/Home';
 import ListProductsPage from './modules/products/pages/ListProductsPage';
 import CreateProductPage from './modules/products/pages/CreateProductPage';
@@ -12,17 +13,11 @@ function App() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <><Outlet /></>,
-      children: [
-        {
-          path: '/',
-          element: <>Listado de productos</>,
-        },
-        {
-          path: '/cart',
-          element: <>Carrito de compras</>,
-        },
-      ],
+      element: <Home />,
+    },
+    {
+      path: '/cart',
+      element: <CartPage />,
     },
     {
       path: '/login',
