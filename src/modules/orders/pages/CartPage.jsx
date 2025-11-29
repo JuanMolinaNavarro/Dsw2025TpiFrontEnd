@@ -241,12 +241,11 @@ function CartPage() {
               <div className="bg-zinc-900 rounded-lg shadow-s p-4 text-white">
                 {/* Encabezado de la tabla */}
                 <div className="px-6 py-4 border-b border-gray-200">
-                  <div className="grid grid-cols-5 gap-4 text-sm font-semibold text-zinc-50">
+                  <div className="grid grid-cols-4 gap-4 text-sm font-semibold text-zinc-50">
                     <div>Producto</div>
                     <div className="text-center">Cantidad</div>
                     <div className="text-right">Precio Unitario</div>
                     <div className="text-right">Total</div>
-                    <div></div>
                   </div>
                 </div>
 
@@ -254,7 +253,7 @@ function CartPage() {
                 <div className="divide-y divide-gray-200">
                   {cartItems.map((item) => (
                     <div key={item.id} className="px-6 py-4">
-                      <div className="grid grid-cols-5 gap-4 items-center">
+                      <div className="grid grid-cols-4 gap-4 items-center">
                         {/* Producto */}
                         <div>
                           <p className="font-semibold text-zinc-50 line-clamp-2">
@@ -301,13 +300,9 @@ function CartPage() {
                             $
                             {(item.currentUnitPrice * item.quantity).toFixed(2)}
                           </p>
-                        </div>
-
-                        {/* Acciones */}
-                        <div className="flex justify-end">
                           <button
                             onClick={() => removeFromCart(item.id)}
-                            className="hover:bg-red-950 hover:text-red-400 text-zinc-50 bg-zinc-900 shadow-s text-sm transition px-4 py-2 rounded"
+                            className="hover:bg-red-950 hover:text-red-400 text-zinc-50 bg-zinc-900  shadow-s text-sm mt-1 transition p-3"
                           >
                             Quitar
                           </button>
