@@ -119,7 +119,7 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-zinc-900">
       {/* Header con búsqueda */}
       <Header onSearch={handleSearch} />
 
@@ -128,7 +128,7 @@ function Home() {
         
         {/* Título y información de búsqueda */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-zinc-50 mb-2">
             Productos
           </h1>
           {searchTerm && (
@@ -141,7 +141,7 @@ function Home() {
         {/* Sección de productos */}
         {error && (
           // Mostrar error si ocurre uno
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6">
             {error}
           </div>
         )}
@@ -150,7 +150,7 @@ function Home() {
           // Mostrar indicador de carga
           <div className="flex justify-center items-center h-64">
             <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
               <p className="text-gray-600 mt-4">Cargando productos...</p>
             </div>
           </div>

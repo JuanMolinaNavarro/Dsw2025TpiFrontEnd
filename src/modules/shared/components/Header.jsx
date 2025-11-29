@@ -66,36 +66,36 @@ function Header({ onSearch }) {
   return (
     <>
       {/* Header principal */}
-      <header className="bg-white border-b border-gray-200 shadow-sm">
+      <header className="shadow-s rounded-xl p-4 bg-zinc-900 text-zinc-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             
             {/* Logo y nombre de la aplicación */}
             <div className="flex items-center gap-8">
-              <div className="text-2xl font-bold text-gray-900">
-                FP
+              <div className="text-2xl font-bold text-zinc-50">
+                <img src="../../../../public/logo.png" alt="Logo" className='h-20'/>
               </div>
 
               {/* Navegación de enlaces principales */}
               <nav className="hidden md:flex gap-6">
                 <a 
                   href="/" 
-                  className="text-gray-700 hover:text-gray-900 font-medium transition"
+                  className="text-zinc-50 hover:text-zinc-400 font-medium transition"
                 >
                   Productos
                 </a>
                 <a 
                   href="/cart" 
-                  className="text-gray-700 hover:text-gray-900 font-medium transition"
+                  className="text-zinc-50 hover:text-zinc-400 font-medium transition"
                 >
                   Carrito de compras
                 </a>
                 {token && (
                   <a 
                     href="/orders" 
-                    className="text-gray-700 hover:text-gray-900 font-medium transition"
+                    className="text-zinc-50 hover:text-zinc-400 font-medium transition"
                   >
-                    Mis Órdenes
+                    Mis Ordenes
                   </a>
                 )}
               </nav>
@@ -104,18 +104,18 @@ function Header({ onSearch }) {
             {/* Barra de búsqueda */}
             <form 
               onSubmit={handleSearch}
-              className="hidden md:flex items-center bg-gray-100 rounded-lg px-4 py-2 flex-1 max-w-md mx-6"
+              className="hidden md:flex items-center bg-zinc-900 rounded-lg px-4 py-2 flex-1 max-w-md mx-6 shadow-s"
             >
               <input 
                 type="text" 
                 placeholder="Search" 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="bg-transparent outline-none flex-1 text-gray-900 placeholder-gray-500"
+                className="bg-transparent outline-none flex-1 text-zinc-200 placeholder-gray-500 border-0"
               />
               <button 
                 type="submit"
-                className="text-gray-600 hover:text-gray-900 ml-2"
+                className="text-zinc-50 hover:text-zinc-200 ml-2"
               >
                 {/* Icono de lupa */}
                 <svg 
@@ -138,7 +138,7 @@ function Header({ onSearch }) {
                       setAuthMode('login');
                       setShowAuthModal(true);
                     }}
-                    className="px-4 py-2 text-purple-600 font-semibold hover:bg-purple-50 rounded-lg transition"
+                    className="shadow-s rounded-xl p-4 bg-zinc-900 text-white transition hover:bg-zinc-50 hover:text-zinc-900"
                   >
                     Iniciar Sesión
                   </button>
@@ -147,7 +147,7 @@ function Header({ onSearch }) {
                       setAuthMode('signup');
                       setShowAuthModal(true);
                     }}
-                    className="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition"
+                    className="shadow-s rounded-xl p-4 bg-zinc-900 text-white transition hover:bg-zinc-50 hover:text-zinc-900"
                   >
                     Registrarse
                   </button>
@@ -166,7 +166,7 @@ function Header({ onSearch }) {
                   )}
                   <button 
                     onClick={handleLogout}
-                    className="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition"
+                    className="shadow-s rounded-xl p-4 bg-zinc-900 text-white transition hover:bg-zinc-50 hover:text-zinc-900"
                   >
                     Cerrar Sesión
                   </button>

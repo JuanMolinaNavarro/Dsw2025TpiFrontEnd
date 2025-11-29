@@ -105,7 +105,7 @@ function ProductCard({ product }) {
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden max-w-xs mx-auto">
+      <div className="shadow-l rounded-xl p-4 bg-zinc-900 text-white">
         {/* SecciA3n de imagen del producto */}
         <div className="bg-gray-200 aspect-square overflow-hidden flex items-center justify-center">
           {product.imageUrl ? (
@@ -122,22 +122,22 @@ function ProductCard({ product }) {
           )}
         </div>
 
-        {/* SecciA3n de informaciA3n del producto */}
+        {/* Sección de información del producto */}
         <div className="p-4">
           {/* Nombre del producto */}
-          <h3 className="text-gray-900 font-semibold text-lg mb-1 line-clamp-2">
+          <h3 className="text-zinc-50 font-semibold h-15 text-lg mb-1 line-clamp-2">
             {product.name}
           </h3>
           
           {/* Precio del producto */}
-          <p className="text-purple-600 text-xl font-bold mb-3">
+          <p className="text-zinc-400 text-xl mb-3">
             ${product.currentUnitPrice.toFixed(2)}
           </p>
 
-          {/* InformaciA3n de stock */}
+          {/* Informacion de stock */}
           {product.stockQuantity > 0 ? (
-            <p className="text-green-600 text-sm font-medium mb-3">
-              Stock disponible: {product.stockQuantity}
+            <p className="text-zinc-400 text-sm font-medium mb-3">
+              Stock: {product.stockQuantity}
             </p>
           ) : (
             <p className="text-red-600 text-sm font-medium mb-3">
@@ -151,28 +151,22 @@ function ProductCard({ product }) {
             <button 
               onClick={handleDecrease}
               disabled={quantity === 0 || product.stockQuantity === 0}
-              className="w-10 h-10 border border-gray-300 rounded flex items-center justify-center 
-                         hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="w-10 h-10 shadow-s rounded-xl p-4 bg-zinc-900 text-white flex items-center justify-center 
+                         hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition hover:text-zinc-950"
             >
               -
             </button>
 
-            {/* Input de cantidad */}
-            <input 
-              type="number" 
-              value={quantity}
-              onChange={handleQuantityChange}
-              disabled={product.stockQuantity === 0}
-              className="w-12 h-10 text-center border border-gray-300 rounded
-                         disabled:bg-gray-100 disabled:cursor-not-allowed"
-            />
+            <p className='p-4'>
+              {quantity}
+            </p>
 
             {/* BotA3n aumentar */}
             <button 
               onClick={handleIncrease}
               disabled={quantity >= product.stockQuantity || product.stockQuantity === 0}
-              className="w-10 h-10 border border-gray-300 rounded flex items-center justify-center 
-                         hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="w-10 h-10 shadow-s rounded-xl p-4 bg-zinc-900 text-white flex items-center justify-center 
+                         hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition hover:text-zinc-950"
             >
               +
             </button>
@@ -182,8 +176,8 @@ function ProductCard({ product }) {
           <button 
             onClick={handleAddToCart}
             disabled={quantity === 0 || product.stockQuantity === 0}
-            className="w-full bg-purple-300 hover:bg-purple-400 disabled:bg-gray-200 disabled:cursor-not-allowed
-                       text-gray-900 font-semibold py-2 rounded transition"
+            className="w-full shadow-s rounded-xl p-4 bg-zinc-900 text-white transition hover:bg-zinc-50 hover:text-zinc-900 disabled:bg-gray-500 disabled:cursor-not-allowed
+                     font-semibold py-2"
           >
             Agregar
           </button>
@@ -191,7 +185,7 @@ function ProductCard({ product }) {
           {/* Mensaje de Acxito */}
           {showSuccess && (
             <p className="text-green-600 text-sm text-center mt-2 font-medium">
-              �o" Agregado al carrito
+              Agregado al carrito
             </p>
           )}
         </div>
@@ -204,6 +198,7 @@ function ProductCard({ product }) {
           initialMode="login"
         />
       )}
+      
     </>
   );
 }

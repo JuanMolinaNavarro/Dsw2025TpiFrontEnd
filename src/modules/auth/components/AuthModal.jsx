@@ -140,16 +140,16 @@ function AuthModal({ onClose, initialMode = 'login' }) {
 
       {/* Modal */}
       <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+        <div className=" shadow-xl max-w-md w-full shadow-s rounded-xl p-4 bg-zinc-900 text-white transition">
           
           {/* Header del modal */}
           <div className="flex justify-between items-center p-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-zinc-100">
               {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 text-2xl"
+              className="text-gray-400 hover:text-gray-600 text-2xl"
             >
               ×
             </button>
@@ -179,7 +179,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
             >
               {/* Campo Usuario */}
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">
+                <label className="block text-zinc-100 font-semibold mb-2">
                   Usuario
                 </label>
                 <input
@@ -187,7 +187,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
                   {...register('username', {
                     required: 'El usuario es obligatorio',
                   })}
-                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white${
                     errors.username ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Tu nombre de usuario"
@@ -200,7 +200,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
               {/* Campo Email - Solo en signup */}
               {!isLogin && (
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-2">
+                  <label className="block text-zinc-100 font-semibold mb-2">
                     Email
                   </label>
                   <input
@@ -212,7 +212,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
                         message: 'Email inválido',
                       },
                     })}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white${
                       errors.email ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="tu@email.com"
@@ -226,7 +226,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
               {/* Campo Nombre Mostrado - Solo en signup */}
               {!isLogin && (
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-2">
+                  <label className="block text-zinc-100 font-semibold mb-2">
                     Nombre Completo
                   </label>
                   <input
@@ -234,7 +234,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
                     {...register('displayName', {
                       required: 'El nombre completo es obligatorio',
                     })}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white${
                       errors.displayName ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="Tu nombre completo"
@@ -248,7 +248,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
               {/* Campo Teléfono - Solo en signup */}
               {!isLogin && (
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-2">
+                  <label className="block text-zinc-100 font-semibold mb-2">
                     Número de Teléfono
                   </label>
                   <input
@@ -256,7 +256,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
                     {...register('phoneNumber', {
                       required: 'El número de teléfono es obligatorio',
                     })}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white ${
                       errors.phoneNumber ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="Tu número de teléfono"
@@ -269,7 +269,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
 
               {/* Campo Contraseña */}
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">
+                <label className="block text-zinc-100 font-semibold mb-2">
                   Contraseña
                 </label>
                 <input
@@ -281,7 +281,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
                       message: 'La contraseña debe tener al menos 6 caracteres',
                     },
                   })}
-                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white ${
                     errors.password ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="••••••"
@@ -294,7 +294,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
               {/* Campo Confirmar Contraseña - Solo en signup */}
               {!isLogin && (
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-2">
+                  <label className="block text-zinc-100 font-semibold mb-2">
                     Confirmar Contraseña
                   </label>
                   <input
@@ -302,7 +302,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
                     {...register('confirmPassword', {
                       required: 'Debe confirmar la contraseña',
                     })}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white${
                       errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="••••••"
@@ -316,7 +316,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
               {/* Botón de envío */}
               <button
                 type="submit"
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-lg transition mt-6"
+                className="w-full shadow-l p-4 bg-zinc-900 text-white hover:bg-zinc-100 hover:text-zinc-900 font-semibold py-2 rounded-lg transition mt-6"
               >
                 {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
               </button>
@@ -324,11 +324,11 @@ function AuthModal({ onClose, initialMode = 'login' }) {
 
             {/* Enlaces para cambiar entre login y signup */}
             <div className="mt-6 text-center">
-              <p className="text-gray-600">
+              <p className="text-gray-400">
                 {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}
                 <button
                   onClick={toggleAuthMode}
-                  className="text-purple-600 hover:text-purple-700 font-semibold ml-2"
+                  className="text-zinc-50 hover:text-zinc-400 font-semibold ml-2 transition"
                 >
                   {isLogin ? 'Registrate aquí' : 'Inicia sesión'}
                 </button>
