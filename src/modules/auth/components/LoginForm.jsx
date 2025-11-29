@@ -65,21 +65,23 @@ function LoginForm() {
         flex
         flex-col
         gap-20
-        bg-white
+        bg-zinc-900
         p-8
         sm:w-md
         sm:gap-4
         sm:rounded-lg
-        sm:shadow-lg
+        sm:shadow-l
+        text-white
+        shadow-l rounded-xl
       '
       onSubmit={handleSubmit(onValid)}
     >
       {/* Título */}
-      <div className="sm:mb-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+      <div className="sm:mb-4 text-zinc-50">
+        <h1 className="text-2xl font-bold text-zinc-50 mb-2">
           Panel Administrativo
         </h1>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-zinc-400">
           Solo administradores pueden acceder
         </p>
       </div>
@@ -109,13 +111,14 @@ function LoginForm() {
       <Button 
         type='submit'
         disabled={loading}
+        className='shadow-l rounded-xl p-4 bg-zinc-900 text-white hover:bg-zinc-800'
       >
         {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
       </Button>
 
       {/* Mensaje de error */}
       {errorMessage && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="bg-red-950 border border-red-200 text-red-200 px-4 py-3 rounded">
           {errorMessage}
         </div>
       )}
@@ -125,6 +128,7 @@ function LoginForm() {
         variant='secondary'
         onClick={() => navigate('/')}
         type='button'
+        className='shadow-l rounded-xl p-4 bg-zinc-900 text-white hover:bg-zinc-800'
       >
         Volver a Inicio
       </Button>

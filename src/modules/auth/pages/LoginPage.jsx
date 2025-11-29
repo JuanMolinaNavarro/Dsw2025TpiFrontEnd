@@ -7,7 +7,7 @@ function LoginPage() {
       flex-col
       justify-center
       h-[100dvh]
-      bg-neutral-100
+      bg-zinc-900
       sm:items-center
     '>
       <LoginForm />

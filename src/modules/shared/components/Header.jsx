@@ -3,183 +3,199 @@ import { useNavigate } from 'react-router-dom';
 import AuthModal from '../../auth/components/AuthModal';
 
 /**
- * Componente Header principal de la aplicación
- * Contiene: Logo, navegación, buscador y botones de autenticación
- * 
- * @component
- * @param {function} onSearch - Callback que se ejecuta cuando el usuario busca
- * @returns {JSX.Element} Header con navegación completa
+ * Header principal con navegacion, busqueda y autenticacion.
+ * Incluye menu responsive para mobile sin modificar los fondos existentes.
  */
 function Header({ onSearch }) {
-  // Estado para controlar si el modal de autenticación está abierto
   const [showAuthModal, setShowAuthModal] = useState(false);
-  
-  // Estado para controlar si mostrar login o signup en el modal
   const [authMode, setAuthMode] = useState('login'); // 'login' o 'signup'
-  
-  // Estado para controlar el término de búsqueda
   const [searchTerm, setSearchTerm] = useState('');
-  
-  // Hook para navegar entre páginas
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const navigate = useNavigate();
-  
-  // Obtenemos el token del localStorage para saber si el usuario está autenticado
   const token = localStorage.getItem('token');
-  
-  // Obtenemos el rol del usuario del localStorage
   const userRole = localStorage.getItem('role');
 
-  /**
-   * Maneja el evento de búsqueda cuando el usuario presiona Enter o hace clic en el botón
-   * Llama al callback onSearch con el término de búsqueda
-   */
   const handleSearch = (e) => {
     e.preventDefault();
-    // Si onSearch existe y está definido, lo ejecutamos pasando el término de búsqueda
-    if (onSearch) {
-      onSearch(searchTerm);
-    }
+    if (onSearch) onSearch(searchTerm);
+    setMenuOpen(false);
   };
 
-  /**
-   * Cierra la sesión del usuario
-   * Elimina el token y el rol del localStorage y redirige a la página principal
-   */
   const handleLogout = () => {
-    // Limpiamos el localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    // Redirigimos a la página principal
     navigate('/');
-    // Recargamos la página para que se actualicen los estados
     window.location.reload();
   };
 
-  /**
-   * Navega al panel de administración
-   * Solo disponible si el usuario es un administrador
-   */
-  const handleAdminDashboard = () => {
-    navigate('/admin');
-  };
+  const handleAdminDashboard = () => navigate('/admin');
+
+  const navLinks = [
+    { href: '/', label: 'Productos' },
+    { href: '/cart', label: 'Carrito de compras' },
+    ...(token ? [{ href: '/orders', label: 'Mis Ordenes' }] : []),
+  ];
+
+  const renderAuthButtons = (isMobile = false) => (
+    !token ? (
+      <div className={`flex gap-2 ${isMobile ? 'w-full flex-col' : ''}`}>
+        <button
+          onClick={() => {
+            setAuthMode('login');
+            setShowAuthModal(true);
+            setMenuOpen(false);
+          }}
+          className="shadow-s rounded-xl p-4 bg-zinc-900 text-white transition hover:bg-zinc-50 hover:text-zinc-900 w-full whitespace-nowrap"
+        >
+          Iniciar Sesion
+        </button>
+        <button
+          onClick={() => {
+            setAuthMode('signup');
+            setShowAuthModal(true);
+            setMenuOpen(false);
+          }}
+          className="shadow-s rounded-xl p-4 bg-zinc-900 text-white transition hover:bg-zinc-50 hover:text-zinc-900 w-full"
+        >
+          Registrarse
+        </button>
+      </div>
+    ) : (
+      <div className={`flex gap-2 ${isMobile ? 'w-full flex-col' : ''}`}>
+        {userRole === 'Admin' && (
+          <button
+            onClick={handleAdminDashboard}
+            className="rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 w-full"
+          >
+            Panel Admin
+          </button>
+        )}
+        <button
+          onClick={handleLogout}
+          className="shadow-s rounded-xl p-4 bg-zinc-900 text-white transition hover:bg-zinc-50 hover:text-zinc-900 w-full whitespace-nowrap"
+        >
+          Cerrar Sesion
+        </button>
+      </div>
+    )
+  );
 
   return (
     <>
-      {/* Header principal */}
-      <header className="shadow-s rounded-xl p-4 bg-zinc-900 text-zinc-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            
-            {/* Logo y nombre de la aplicación */}
-            <div className="flex items-center gap-8">
-              <div className="text-2xl font-bold text-zinc-50">
-                <img src="../../../../public/logo.png" alt="Logo" className='h-20'/>
-              </div>
-
-              {/* Navegación de enlaces principales */}
-              <nav className="hidden md:flex gap-6">
-                <a 
-                  href="/" 
-                  className="text-zinc-50 hover:text-zinc-400 font-medium transition"
-                >
-                  Productos
-                </a>
-                <a 
-                  href="/cart" 
-                  className="text-zinc-50 hover:text-zinc-400 font-medium transition"
-                >
-                  Carrito de compras
-                </a>
-                {token && (
-                  <a 
-                    href="/orders" 
-                    className="text-zinc-50 hover:text-zinc-400 font-medium transition"
-                  >
-                    Mis Ordenes
-                  </a>
-                )}
-              </nav>
-            </div>
-
-            {/* Barra de búsqueda */}
-            <form 
-              onSubmit={handleSearch}
-              className="hidden md:flex items-center bg-zinc-900 rounded-lg px-4 py-2 flex-1 max-w-md mx-6 shadow-s"
+      <header className="shadow-s rounded-xl bg-zinc-900 text-zinc-50">
+        <div className="mx-auto flex items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center gap-2 text-left"
             >
-              <input 
-                type="text" 
-                placeholder="Search" 
+              <img src="../../../../public/logo.png" alt="Logo" className="h-14 w-auto" />
+            </button>
+          </div>
+
+          {/* Desktop nav */}
+          <nav className="hidden items-center gap-6 md:flex">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-zinc-50 font-medium transition hover:text-zinc-400"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* Desktop search */}
+          <form
+            onSubmit={handleSearch}
+            className="hidden flex-1 items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 shadow-s md:flex md:max-w-md"
+          >
+            <input
+              type="text"
+              placeholder="Buscar productos..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none border-0"
+            />
+            <button
+              type="submit"
+              className="text-zinc-100 transition hover:text-white"
+              aria-label="Buscar"
+            >
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </form>
+
+          {/* Desktop auth */}
+          <div className="hidden md:flex items-center gap-3">
+            {renderAuthButtons()}
+          </div>
+
+          {/* Mobile toggles */}
+          <div className="flex items-center gap-3 md:hidden">
+            <button
+              onClick={() => setMenuOpen((prev) => !prev)}
+              className="rounded-xl bg-zinc-900 p-3 text-white shadow-s transition hover:bg-zinc-800"
+              aria-label="Abrir menu"
+            >
+              {menuOpen ? '✕' : '☰'}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile panel */}
+        {menuOpen && (
+          <div className="border-t border-zinc-800 bg-zinc-900 px-4 pb-4 pt-3 sm:px-6 md:hidden">
+            <form
+              onSubmit={handleSearch}
+              className="mb-3 flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 shadow-s"
+            >
+              <input
+                type="text"
+                placeholder="Buscar productos..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="bg-transparent outline-none flex-1 text-zinc-200 placeholder-gray-500 border-0"
+                className="flex-1 bg-transparent text-sm text-zinc-100 placeholder:text-zinc-500 outline-none"
               />
-              <button 
+              <button
                 type="submit"
-                className="text-zinc-50 hover:text-zinc-200 ml-2"
+                className="text-zinc-100 transition hover:text-white"
+                aria-label="Buscar"
               >
-                {/* Icono de lupa */}
-                <svg 
-                  className="w-5 h-5" 
-                  fill="currentColor" 
-                  viewBox="0 0 20 20"
-                >
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
                 </svg>
               </button>
             </form>
 
-            {/* Botones de autenticación y perfil */}
-            <div className="flex items-center gap-4">
-              {!token ? (
-                // Si el usuario NO está autenticado, mostramos botones de login y signup
-                <>
-                  <button 
-                    onClick={() => {
-                      setAuthMode('login');
-                      setShowAuthModal(true);
-                    }}
-                    className="shadow-s rounded-xl p-4 bg-zinc-900 text-white transition hover:bg-zinc-50 hover:text-zinc-900"
+            <div className="flex flex-col gap-3">
+              <nav className="flex flex-col gap-2">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="rounded-xl px-3 py-2 text-zinc-50 transition hover:bg-zinc-800"
+                    onClick={() => setMenuOpen(false)}
                   >
-                    Iniciar Sesión
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setAuthMode('signup');
-                      setShowAuthModal(true);
-                    }}
-                    className="shadow-s rounded-xl p-4 bg-zinc-900 text-white transition hover:bg-zinc-50 hover:text-zinc-900"
-                  >
-                    Registrarse
-                  </button>
-                </>
-              ) : (
-                // Si el usuario ESTÁ autenticado, mostramos botones de cerrar sesión y panel admin
-                <>
-                  {/* Mostrar botón de admin solo si el rol es "Admin" */}
-                  {userRole === 'Admin' && (
-                    <button 
-                      onClick={handleAdminDashboard}
-                      className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
-                    >
-                      Panel Admin
-                    </button>
-                  )}
-                  <button 
-                    onClick={handleLogout}
-                    className="shadow-s rounded-xl p-4 bg-zinc-900 text-white transition hover:bg-zinc-50 hover:text-zinc-900"
-                  >
-                    Cerrar Sesión
-                  </button>
-                </>
-              )}
+                    {link.label}
+                  </a>
+                ))}
+              </nav>
+
+              {renderAuthButtons(true)}
             </div>
           </div>
-        </div>
+        )}
       </header>
 
-      {/* Modal de autenticación - se muestra solo si showAuthModal es true */}
+      {/* Modal de autenticacion */}
       {showAuthModal && (
-        <AuthModal 
+        <AuthModal
           onClose={() => setShowAuthModal(false)}
           initialMode={authMode}
         />

@@ -39,3 +39,37 @@ export const getProducts = async (search = '', status = 'all', pageNumber = 1, p
     };
   }
 };
+
+/**
+ * Obtiene detalle de un producto por ID para edicion
+ * @param {string|number} id
+ */
+export const getProductById = async (id) => {
+  try {
+    // Intentar primero el endpoint publico (evita 404 del admin)
+    const response = await instance.get(`api/products/${id}`);
+    return {
+      data: response.data,
+      error: null,
+    };
+  } catch (error) {
+    // Si el publico falla/404, probar el admin
+    if (error?.response?.status === 404) {
+      try {
+        const fallback = await instance.get(`api/products/admin/${id}`);
+        return { data: fallback.data, error: null };
+      } catch (err) {
+        console.error('Fallback product detail error:', err);
+        return {
+          data: null,
+          error: err.response?.data?.message || err.message || 'Error al cargar el producto',
+        };
+      }
+    }
+    console.error('Error fetching product detail:', error);
+    return {
+      data: null,
+      error: error.response?.data?.message || error.message || 'Error al cargar el producto',
+    };
+  }
+};

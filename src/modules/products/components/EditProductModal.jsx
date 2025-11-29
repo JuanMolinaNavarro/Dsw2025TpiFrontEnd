@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { updateProduct } from '../services/update';
 
@@ -14,7 +14,7 @@ function EditProductModal({ product, onClose, onSuccess }) {
       sku: product.sku || '',
       name: product.name || '',
       description: product.description || '',
-      internalCode: product.internalCode || '',
+      internalCode: product.internalCode || product.cui || '',
       currentUnitPrice: product.currentUnitPrice || 0,
       stockQuantity: product.stockQuantity || 0,
       imageUrl: product.imageUrl || '',
@@ -27,7 +27,20 @@ function EditProductModal({ product, onClose, onSuccess }) {
 
   const skuValue = watch('sku');
 
-  // Manejar envA-o del formulario
+  // Actualizar valores cuando cambie el producto
+  useEffect(() => {
+    reset({
+      sku: product.sku || '',
+      name: product.name || '',
+      description: product.description || '',
+      internalCode: product.internalCode || product.cui || '',
+      currentUnitPrice: product.currentUnitPrice || 0,
+      stockQuantity: product.stockQuantity || 0,
+      imageUrl: product.imageUrl || '',
+    });
+  }, [product, reset]);
+
+  // Manejar envio del formulario
   const onSubmit = async (data) => {
     try {
       setLoading(true);
@@ -41,7 +54,7 @@ function EditProductModal({ product, onClose, onSuccess }) {
       }
 
       setSuccess(true);
-      
+
       // Esperar un momento antes de cerrar
       setTimeout(() => {
         reset();
@@ -57,179 +70,180 @@ function EditProductModal({ product, onClose, onSuccess }) {
   };
 
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30'>
-      <div className='bg-white rounded-lg shadow-lg max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto'>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+      <div className="w-full max-w-3xl overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950/90 shadow-2xl">
         {/* Encabezado */}
-        <div className='p-6 border-b border-gray-200'>
-          <div className='flex justify-between items-center'>
-            <h2 className='text-2xl font-bold'>Editar Producto</h2>
-            <button
-              onClick={onClose}
-              className='text-gray-400 hover:text-gray-600 text-2xl'
-              aria-label='Cerrar'
-            >
-              A-
-            </button>
+        <div className="flex items-start justify-between border-b border-zinc-800 px-6 py-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Edicion</p>
+            <h2 className="text-2xl font-bold text-white">Editar producto</h2>
           </div>
+          <button
+            onClick={onClose}
+            className="rounded-lg bg-zinc-900 px-3 py-2 text-lg text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+            aria-label="Cerrar"
+          >
+            ×
+          </button>
         </div>
 
         {/* Contenido */}
-        <form onSubmit={handleSubmit(onSubmit)} className='p-6 space-y-4'>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-6 py-5">
           {/* Mensajes */}
           {error && (
-            <div className='p-3 bg-red-100 text-red-800 rounded border border-red-300 text-sm'>
+            <div className="rounded-xl border border-red-900/40 bg-red-900/30 px-4 py-3 text-sm text-red-200">
               {error}
             </div>
           )}
 
           {success && (
-            <div className='p-3 bg-green-100 text-green-800 rounded border border-green-300 text-sm'>
-              �o" Producto actualizado correctamente
+            <div className="rounded-xl border border-emerald-900/40 bg-emerald-900/30 px-4 py-3 text-sm text-emerald-200">
+              Producto actualizado correctamente
             </div>
           )}
 
           {/* SKU */}
           <div>
-            <label className='block text-sm font-semibold mb-1'>
-              SKU* 
-              <span className='text-xs text-gray-500 ml-2'>(MAYAsSCULAS, nA�meros y guiones)</span>
+            <label className="mb-1 block text-sm font-semibold text-zinc-200">
+              SKU*
+              <span className="ml-2 text-xs text-zinc-500">(MAYUSCULAS, numeros y guiones)</span>
             </label>
             <input
-              type='text'
+              type="text"
               {...register('sku', {
                 required: 'SKU es obligatorio',
                 minLength: { value: 3, message: 'SKU debe tener al menos 3 caracteres' },
                 maxLength: { value: 50, message: 'SKU no puede exceder 50 caracteres' },
                 pattern: {
                   value: /^[A-Z0-9\\-]*$/,
-                  message: 'SKU solo puede contener MAYAsSCULAS, nA�meros y guiones',
+                  message: 'SKU solo puede contener MAYUSCULAS, numeros y guiones',
                 },
               })}
               onChange={(e) => {
-                // Convertir a mayA�sculas automA�ticamente
+                // Convertir a mayusculas automaticamente
                 e.target.value = e.target.value.toUpperCase();
               }}
               disabled={loading || success}
-              className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
-              placeholder='Ej: PROD-001'
+              className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white outline-none ring-emerald-500/40 transition focus:border-emerald-500 focus:ring-2 disabled:bg-zinc-800"
+              placeholder="Ej: PROD-001"
             />
-            {errors.sku && <span className='text-red-600 text-sm'>{errors.sku.message}</span>}
+            {errors.sku && <span className="text-sm text-red-400">{errors.sku.message}</span>}
             {skuValue && !/^[A-Z0-9\\-]*$/.test(skuValue) && (
-              <span className='text-orange-600 text-xs'>�s� Se convertirA� a mayA�sculas al guardar</span>
+              <span className="text-xs text-amber-300">Se convertira a mayusculas al guardar</span>
             )}
           </div>
 
           {/* Nombre */}
           <div>
-            <label className='block text-sm font-semibold mb-1'>Nombre*</label>
+            <label className="mb-1 block text-sm font-semibold text-zinc-200">Nombre*</label>
             <input
-              type='text'
+              type="text"
               {...register('name', {
                 required: 'Nombre es obligatorio',
                 minLength: { value: 3, message: 'Nombre debe tener al menos 3 caracteres' },
                 maxLength: { value: 100, message: 'Nombre no puede exceder 100 caracteres' },
               })}
               disabled={loading || success}
-              className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
-              placeholder='Ej: Producto de prueba'
+              className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white outline-none ring-emerald-500/40 transition focus:border-emerald-500 focus:ring-2 disabled:bg-zinc-800"
+              placeholder="Ej: Producto de prueba"
             />
-            {errors.name && <span className='text-red-600 text-sm'>{errors.name.message}</span>}
+            {errors.name && <span className="text-sm text-red-400">{errors.name.message}</span>}
           </div>
 
-          {/* CA3digo Interno */}
+          {/* Codigo Interno */}
           <div>
-            <label className='block text-sm font-semibold mb-1'>CA3digo Interno*</label>
+            <label className="mb-1 block text-sm font-semibold text-zinc-200">Codigo Interno*</label>
             <input
-              type='text'
+              type="text"
               {...register('internalCode', {
-                required: 'CA3digo Interno es obligatorio',
-                minLength: { value: 1, message: 'CA3digo Interno es obligatorio' },
-                maxLength: { value: 50, message: 'CA3digo Interno no puede exceder 50 caracteres' },
+                required: 'Codigo Interno es obligatorio',
+                minLength: { value: 1, message: 'Codigo Interno es obligatorio' },
+                maxLength: { value: 50, message: 'Codigo Interno no puede exceder 50 caracteres' },
               })}
               disabled={loading || success}
-              className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
-              placeholder='Ej: INT-001'
+              className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white outline-none ring-emerald-500/40 transition focus:border-emerald-500 focus:ring-2 disabled:bg-zinc-800"
+              placeholder="Ej: INT-001"
             />
-            {errors.internalCode && <span className='text-red-600 text-sm'>{errors.internalCode.message}</span>}
+            {errors.internalCode && <span className="text-sm text-red-400">{errors.internalCode.message}</span>}
           </div>
 
-          {/* DescripciA3n */}
+          {/* Descripcion */}
           <div>
-            <label className='block text-sm font-semibold mb-1'>DescripciA3n</label>
+            <label className="mb-1 block text-sm font-semibold text-zinc-200">Descripcion</label>
             <textarea
               {...register('description', {
-                maxLength: { value: 250, message: 'DescripciA3n no puede exceder 250 caracteres' },
+                maxLength: { value: 250, message: 'Descripcion no puede exceder 250 caracteres' },
               })}
               disabled={loading || success}
-              className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
-              placeholder='DescripciA3n del producto'
-              rows='3'
+              className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white outline-none ring-emerald-500/40 transition focus:border-emerald-500 focus:ring-2 disabled:bg-zinc-800"
+              placeholder="Descripcion del producto"
+              rows="3"
             />
-            {errors.description && <span className='text-red-600 text-sm'>{errors.description.message}</span>}
+            {errors.description && <span className="text-sm text-red-400">{errors.description.message}</span>}
           </div>
 
           {/* URL de imagen */}
           <div>
-            <label className='block text-sm font-semibold mb-1'>URL de imagen</label>
+            <label className="mb-1 block text-sm font-semibold text-zinc-200">URL de imagen</label>
             <input
-              type='url'
+              type="url"
               {...register('imageUrl', {
                 maxLength: { value: 500, message: 'La URL es demasiado larga' },
               })}
               disabled={loading || success}
-              className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
-              placeholder='https://...'
+              className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white outline-none ring-emerald-500/40 transition focus:border-emerald-500 focus:ring-2 disabled:bg-zinc-800"
+              placeholder="https://..."
             />
-            {errors.imageUrl && <span className='text-red-600 text-sm'>{errors.imageUrl.message}</span>}
+            {errors.imageUrl && <span className="text-sm text-red-400">{errors.imageUrl.message}</span>}
           </div>
 
           {/* Precio */}
           <div>
-            <label className='block text-sm font-semibold mb-1'>Precio*</label>
+            <label className="mb-1 block text-sm font-semibold text-zinc-200">Precio*</label>
             <input
-              type='number'
-              step='0.01'
+              type="number"
+              step="0.01"
               {...register('currentUnitPrice', {
                 required: 'Precio es obligatorio',
                 min: { value: 0.01, message: 'Precio debe ser mayor a 0' },
               })}
               disabled={loading || success}
-              className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
-              placeholder='Ej: 99.99'
+              className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white outline-none ring-emerald-500/40 transition focus:border-emerald-500 focus:ring-2 disabled:bg-zinc-800"
+              placeholder="Ej: 99.99"
             />
-            {errors.currentUnitPrice && <span className='text-red-600 text-sm'>{errors.currentUnitPrice.message}</span>}
+            {errors.currentUnitPrice && <span className="text-sm text-red-400">{errors.currentUnitPrice.message}</span>}
           </div>
 
           {/* Stock */}
           <div>
-            <label className='block text-sm font-semibold mb-1'>Stock*</label>
+            <label className="mb-1 block text-sm font-semibold text-zinc-200">Stock*</label>
             <input
-              type='number'
+              type="number"
               {...register('stockQuantity', {
                 required: 'Stock es obligatorio',
                 min: { value: 0, message: 'Stock no puede ser negativo' },
               })}
               disabled={loading || success}
-              className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
-              placeholder='Ej: 100'
+              className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white outline-none ring-emerald-500/40 transition focus:border-emerald-500 focus:ring-2 disabled:bg-zinc-800"
+              placeholder="Ej: 100"
             />
-            {errors.stockQuantity && <span className='text-red-600 text-sm'>{errors.stockQuantity.message}</span>}
+            {errors.stockQuantity && <span className="text-sm text-red-400">{errors.stockQuantity.message}</span>}
           </div>
 
           {/* Botones */}
-          <div className='flex gap-2 pt-4'>
+          <div className="flex flex-wrap gap-2 pt-4">
             <button
-              type='button'
+              type="button"
               onClick={onClose}
               disabled={loading}
-              className='flex-1 px-4 py-2 bg-gray-300 hover:bg-gray-400 disabled:bg-gray-200 text-gray-800 rounded font-semibold transition'
+              className="flex-1 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-semibold text-white transition hover:border-zinc-700 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-70"
             >
               Cancelar
             </button>
             <button
-              type='submit'
+              type="submit"
               disabled={loading || success}
-              className='flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded font-semibold transition'
+              className="flex-1 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:bg-emerald-500/60"
             >
               {loading ? 'Actualizando...' : 'Actualizar'}
             </button>
@@ -241,4 +255,3 @@ function EditProductModal({ product, onClose, onSuccess }) {
 }
 
 export default EditProductModal;
-

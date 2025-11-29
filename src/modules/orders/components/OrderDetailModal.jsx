@@ -2,94 +2,57 @@ import { useState, useEffect } from 'react';
 import { getOrderById } from '../services/orderService';
 
 /**
- * Componente OrderDetailModal
- * Modal que muestra el detalle completo de una orden con sus productos
- * 
- * @component
- * @param {object} order - Datos de la orden a mostrar
- * @param {function} onClose - Función para cerrar el modal
- * @returns {JSX.Element} Modal con detalle de la orden
+ * Modal de detalle de orden con diseño responsive.
  */
-function OrderDetailModal({ order, onClose }) {
-  // Estado para almacenar los productos de la orden
+function OrderDetailModal({ order, orderId, isAdmin = false, onClose }) {
   const [orderItems, setOrderItems] = useState([]);
-  
-  // Estado para el total de la orden
   const [total, setTotal] = useState(0);
-  
-  // Estado para los detalles completos de la orden
-  const [orderDetails, setOrderDetails] = useState(null);
-  
-  // Estado de carga
+  const [orderDetails, setOrderDetails] = useState(order || null);
   const [loading, setLoading] = useState(false);
 
-  /**
-   * Efecto que se ejecuta cuando se carga el modal
-   * Obtiene los detalles completos de la orden desde el backend
-   */
+  const effectiveId = orderId || order?.id;
+
   useEffect(() => {
-    if (order && order.id) {
+    if (effectiveId) {
       loadOrderDetails();
     }
-  }, [order]);
+  }, [effectiveId, isAdmin]);
 
-  /**
-   * Carga los detalles completos de la orden desde el backend
-   */
   const loadOrderDetails = async () => {
     try {
       setLoading(true);
-      
-      // Obtenemos los detalles completos de la orden
-      const { data, error } = await getOrderById(order.id);
-      
+      const { data, error } = await getOrderById(effectiveId);
       if (error) {
         console.error('Error al cargar detalles:', error);
-        // Si hay error, usamos los datos básicos de la orden
-        processOrderData(order);
+        processOrderData(order || {});
         return;
       }
-
-      // Procesamos los datos completos
       processOrderData(data);
       setOrderDetails(data);
     } catch (err) {
       console.error('Error inesperado:', err);
-      processOrderData(order);
+      processOrderData(order || {});
     } finally {
       setLoading(false);
     }
   };
 
-  /**
-   * Procesa los datos de la orden para extraer items y totales
-   */
   const processOrderData = (orderData) => {
     if (!orderData) return;
-
-    // Intentamos obtener los items de la orden
     const items = orderData.orderItems || orderData.OrderItems || orderData.items || [];
     setOrderItems(items);
-    
-    // Calculamos el total basado en los items si están disponibles
     if (items && items.length > 0) {
       const calculatedTotal = items.reduce((sum, item) => {
         const price = item.unitPrice || item.UnitPrice || 0;
         const quantity = item.quantity || item.Quantity || 0;
-        return sum + (price * quantity);
+        return sum + price * quantity;
       }, 0);
       setTotal(calculatedTotal);
     } else {
-      // Si no hay items, usamos el totalAmount de la orden
       setTotal(orderData.totalAmount || orderData.TotalAmount || 0);
     }
   };
 
-  /**
-   * Formatea una fecha a formato legible
-   * @param {string} dateString - Fecha en formato ISO
-   * @returns {string} Fecha formateada
-   */
   const formatDate = (dateString) => {
     try {
       if (!dateString) return 'Fecha no disponible';
@@ -107,11 +70,6 @@ function OrderDetailModal({ order, onClose }) {
     }
   };
 
-  /**
-   * Retorna el texto del estado en español
-   * @param {string} status - Estado en inglés
-   * @returns {string} Estado en español
-   */
   const getStatusLabel = (status) => {
     const statusMap = {
       pending: 'Pendiente',
@@ -125,11 +83,6 @@ function OrderDetailModal({ order, onClose }) {
     return statusMap[status?.toLowerCase()] || status || 'Desconocido';
   };
 
-  /**
-   * Retorna el color de fondo según el estado de la orden
-   * @param {string} status - Estado de la orden
-   * @returns {string} Clase de Tailwind para el color de fondo
-   */
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case 'pending':
@@ -148,210 +101,180 @@ function OrderDetailModal({ order, onClose }) {
     }
   };
 
+  const orderData = orderDetails || order || {};
+
   return (
     <>
-      {/* Fondo con efecto blur */}
-      <div 
-        className="fixed inset-0 backdrop-blur-sm bg-black/30 z-40"
+      <div
+        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       ></div>
 
-      {/* Modal */}
-      <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-        <div className="bg-zinc-900 rounded-lg shadow-s max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          
-          {/* Header del modal */}
-          <div className="flex justify-between items-center p-6 border-b border-gray-200 sticky top-0 bg-zinc-900">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl">
+          {/* Header */}
+          <div className="sticky top-0 flex items-start justify-between gap-3 border-b border-zinc-800 bg-zinc-900 px-6 py-4">
             <div>
-              <h2 className="text-2xl font-bold text-zinc-50">
+              <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
                 Detalle de Orden
-              </h2>
-              <p className="text-sm text-zinc-200 mt-1">
-                Orden #{order.id?.substring(0, 8) || 'N/A'}
               </p>
+              <h2 className="text-xl font-bold text-zinc-50">
+                Orden #{orderData.id?.substring(0, 8) || effectiveId || 'N/A'}
+              </h2>
             </div>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-zinc-200 text-2xl"
+              className="rounded-lg bg-zinc-900 px-3 py-2 text-lg text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+              aria-label="Cerrar"
             >
               ×
             </button>
           </div>
 
-          {/* Contenido del modal */}
-          <div className="p-6 space-y-6">
-            
-            {loading && (
-              <div className="text-center py-8">
-                <div className="inline-block animate-spin mb-4">
-                  <div className="h-8 w-8 border-4 border-white border-t-transparent rounded-full"></div>
-                </div>
+          <div className="space-y-6 px-6 py-5">
+            {loading ? (
+              <div className="py-10 text-center">
+                <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-zinc-600 border-t-transparent" />
                 <p className="text-zinc-200">Cargando detalles de la orden...</p>
               </div>
-            )}
-
-            {!loading && (
+            ) : (
               <>
-            
-            {/* Información general de la orden */}
-            <div className="bg-zinc-900 p-4 rounded-lg">
-              <div className="grid grid-cols-2 gap-4">
-                {/* Fecha */}
-                <div>
-                  <p className="text-sm text-zinc-200 font-semibold">Fecha de Orden</p>
-                  <p className="text-zinc-50 mt-1">
-                    {formatDate(order.date)}
-                  </p>
-                </div>
-
-                {/* Estado */}
-                <div>
-                  <p className="text-sm text-zinc-200 font-semibold">Estado</p>
-                  <div className="mt-1">
-                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(order.status)}`}>
-                      {getStatusLabel(order.status)}
-                    </span>
+                {/* Info general */}
+                <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <p className="text-sm font-semibold text-zinc-300">Fecha de Orden</p>
+                      <p className="text-zinc-50">{formatDate(orderData.date)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-zinc-300">Estado</p>
+                      <span className={`mt-1 inline-block rounded-full px-3 py-1 text-sm font-semibold ${getStatusColor(orderData.status)}`}>
+                        {getStatusLabel(orderData.status)}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-zinc-300">Cliente</p>
+                      <p className="text-zinc-50">{orderData.customerName}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-zinc-300">Total</p>
+                      <p className="text-2xl font-bold text-zinc-50">
+                        ${(orderData.totalAmount || total).toFixed(2)}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Cliente */}
+                {/* Productos */}
                 <div>
-                  <p className="text-sm text-zinc-200 font-semibold">Cliente</p>
-                  <p className="text-zinc-50 mt-1">
-                    {order.customerName}
-                  </p>
-                </div>
-
-                {/* Total */}
-                <div>
-                  <p className="text-sm text-zinc-200 font-semibold">Total</p>
-                  <p className="text-zinc-50 font-semibold text-2xl mt-1">
-                    ${(order.totalAmount || total).toFixed(2)}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Productos en la orden */}
-            <div>
-              <h3 className="text-lg font-semibold text-zinc-50 mb-4">Productos</h3>
-              
-              {orderItems && orderItems.length > 0 ? (
-                <div className="space-y-3">
-                  {/* Encabezado de tabla */}
-                  <div className="grid grid-cols-12 gap-4 px-4 py-2 bg-zinc-900 rounded-lg font-semibold text-sm text-zinc-200">
-                    <div className="col-span-6">Producto</div>
-                    <div className="col-span-2 text-center">Cantidad</div>
-                    <div className="col-span-2 text-right">Precio Unit.</div>
-                    <div className="col-span-2 text-right">Subtotal</div>
-                  </div>
-
-                  {/* Items de la orden */}
-                  {orderItems.map((item, index) => {
-                    const unitPrice = item.unitPrice || item.UnitPrice || 0;
-                    const quantity = item.quantity || item.Quantity || 0;
-                    const subtotal = unitPrice * quantity;
-
-                    return (
-                      <div key={index} className="grid grid-cols-12 gap-4 px-4 py-3 border border-gray-200 rounded-lg transition">
-                        {/* Nombre del producto */}
-                        <div className="col-span-6">
-                          <p className="text-zinc-50 font-medium">
-                            {item.productName || item.ProductName || `Producto ${index + 1}`}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            ID: {item.productId || item.ProductId || 'N/A'}
-                          </p>
-                        </div>
-
-                        {/* Cantidad */}
-                        <div className="col-span-2 text-center">
-                          <p className="text-zinc-50 font-semibold">
-                            {quantity}
-                          </p>
-                        </div>
-
-                        {/* Precio unitario */}
-                        <div className="col-span-2 text-right">
-                          <p className="text-zinc-50">
-                            ${unitPrice.toFixed(2)}
-                          </p>
-                        </div>
-
-                        {/* Subtotal */}
-                        <div className="col-span-2 text-right">
-                          <p className="text-zinc-50 font-semibold">
-                            ${subtotal.toFixed(2)}
-                          </p>
-                        </div>
+                  <h3 className="mb-3 text-lg font-semibold text-zinc-50">Productos</h3>
+                  {orderItems && orderItems.length > 0 ? (
+                    <div className="space-y-3">
+                      {/* Encabezado desktop */}
+                      <div className="hidden grid-cols-12 gap-4 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-200 md:grid">
+                        <div className="col-span-6">Producto</div>
+                        <div className="col-span-2 text-center">Cantidad</div>
+                        <div className="col-span-2 text-right">Precio Unit.</div>
+                        <div className="col-span-2 text-right">Subtotal</div>
                       </div>
-                    );
-                  })}
 
-                  {/* Total */}
-                  <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-zinc-900  rounded-lg font-semibold">
-                    <div className="col-span-8 text-right text-zinc-50">
-                      TOTAL:
+                      {orderItems.map((item, index) => {
+                        const unitPrice = item.unitPrice || item.UnitPrice || 0;
+                        const quantity = item.quantity || item.Quantity || 0;
+                        const subtotal = unitPrice * quantity;
+
+                        return (
+                          <div
+                            key={index}
+                            className="rounded-xl border border-zinc-800 bg-zinc-950/70 p-4 transition hover:border-zinc-700"
+                          >
+                            <div className="grid grid-cols-1 gap-3 md:grid-cols-12 md:items-center md:gap-4">
+                              <div className="md:col-span-6">
+                                <p className="text-base font-semibold text-zinc-50">
+                                  {item.productName || item.ProductName || `Producto ${index + 1}`}
+                                </p>
+                                <p className="mt-1 text-xs text-zinc-500">
+                                  ID: {item.productId || item.ProductId || 'N/A'}
+                                </p>
+                              </div>
+
+                              <div className="flex items-center justify-between md:col-span-2 md:block md:text-center">
+                                <span className="text-sm text-zinc-400 md:hidden">Cantidad</span>
+                                <p className="text-lg font-semibold text-zinc-50">{quantity}</p>
+                              </div>
+
+                              <div className="flex items-center justify-between md:col-span-2 md:block md:text-right">
+                                <span className="text-sm text-zinc-400 md:hidden">Precio Unit.</span>
+                                <p className="text-base font-semibold text-zinc-50">
+                                  ${unitPrice.toFixed(2)}
+                                </p>
+                              </div>
+
+                              <div className="flex items-center justify-between md:col-span-2 md:block md:text-right">
+                                <span className="text-sm text-zinc-400 md:hidden">Subtotal</span>
+                                <p className="text-lg font-bold text-zinc-50">
+                                  ${subtotal.toFixed(2)}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      <div className="flex flex-col gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-zinc-50 md:flex-row md:items-center md:justify-between">
+                        <span className="text-base font-semibold">TOTAL:</span>
+                        <span className="text-xl font-bold">${(orderData.totalAmount || total).toFixed(2)}</span>
+                      </div>
                     </div>
-                    <div className="col-span-4 text-right text-zinc-50 text-lg">
-                      ${(order.totalAmount || total).toFixed(2)}
+                  ) : (
+                    <div className="rounded-xl border border-zinc-800 bg-zinc-950/70 p-6 text-center text-zinc-200">
+                      No hay informacion de productos disponible
+                    </div>
+                  )}
+                </div>
+
+                {/* Direcciones */}
+                {(orderData.shippingAddress || orderData.ShippingAddress || orderData.billingAddress || orderData.BillingAddress) && (
+                  <div className="space-y-3 border-t border-zinc-800 pt-4">
+                    <h3 className="text-lg font-semibold text-zinc-50">Informacion de Envio</h3>
+                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                      {(orderData.shippingAddress || orderData.ShippingAddress) && (
+                        <div className="rounded-xl border border-zinc-800 bg-zinc-950/70 p-4">
+                          <p className="text-sm font-semibold text-zinc-300 mb-1">Direccion de Envio</p>
+                          <p className="text-sm text-zinc-100">
+                            {orderData.shippingAddress || orderData.ShippingAddress}
+                          </p>
+                        </div>
+                      )}
+                      {(orderData.billingAddress || orderData.BillingAddress) && (
+                        <div className="rounded-xl border border-zinc-800 bg-zinc-950/70 p-4">
+                          <p className="text-sm font-semibold text-zinc-300 mb-1">Direccion de Facturacion</p>
+                          <p className="text-sm text-zinc-100">
+                            {orderData.billingAddress || orderData.BillingAddress}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
-              ) : (
-                <div className="bg-zinc-900 rounded-lg p-6 text-center">
-                  <p className="text-zinc-200">
-                    No hay información de productos disponible
-                  </p>
-                </div>
-              )}
-            </div>
+                )}
 
-            {/* Información de envío y facturación */}
-            {(order.shippingAddress || order.ShippingAddress || order.billingAddress || order.BillingAddress) && (
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-lg font-semibold text-zinc-50 mb-4">Información de Envío</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {(order.shippingAddress || order.ShippingAddress) && (
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <p className="text-sm text-zinc-200 font-semibold mb-2">Dirección de Envío</p>
-                      <p className="text-zinc-50 text-sm">
-                        {order.shippingAddress || order.ShippingAddress}
-                      </p>
+                {/* Notas */}
+                {(orderData.notes || orderData.Notes) && (
+                  <div className="space-y-2 border-t border-zinc-800 pt-4">
+                    <h3 className="text-lg font-semibold text-zinc-50">Notas</h3>
+                    <div className="rounded-xl border border-amber-200/40 bg-amber-900/20 p-4">
+                      <p className="text-sm text-amber-100">{orderData.notes || orderData.Notes}</p>
                     </div>
-                  )}
-                  {(order.billingAddress || order.BillingAddress) && (
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <p className="text-sm text-zinc-200 font-semibold mb-2">Dirección de Facturación</p>
-                      <p className="text-zinc-50 text-sm">
-                        {order.billingAddress || order.BillingAddress}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Notas */}
-            {(order.notes || order.Notes) && (
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-lg font-semibold text-zinc-50 mb-4">Notas</h3>
-                <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                  <p className="text-zinc-50 text-sm">
-                    {order.notes || order.Notes}
-                  </p>
-                </div>
-              </div>
-            )}
+                  </div>
+                )}
               </>
             )}
           </div>
 
-          {/* Footer del modal */}
-          <div className="px-6 py-4 flex justify-end bg-zinc-900">
+          <div className="flex justify-end px-6 py-4 border-t border-zinc-800 bg-zinc-900">
             <button
               onClick={onClose}
-              className="shadow-s rounded-xl p-4 bg-zinc-900 text-white font-semibold hover:bg-zinc-800 transition text-sm"
+              className="shadow-s rounded-xl bg-zinc-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
             >
               Cerrar
             </button>

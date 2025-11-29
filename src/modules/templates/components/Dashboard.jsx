@@ -27,16 +27,16 @@ function Dashboard() {
 
   const getLinkStyles = ({ isActive }) => (
     `
-      pl-4 w-full block  pt-4 pb-4 rounded-4xl transition hover:bg-gray-100
+      pl-4 w-full block  p-4 transition shadow-l rounded-xl p-4 bg-zinc-900 text-gray-400 hover:bg-zinc-800 
       ${isActive
-      ? 'bg-purple-200 hover:bg-purple-100 '
+      ? 'text-zinc-50' 
       : ''
     }
     `
   );
 
   const renderLogoutButton = (mobile = false) => (
-    <Button className={`${mobile ? 'block w-full sm:hidden' :  'hidden sm:block' }`} onClick={logout}>Cerrar sesión</Button>
+    <Button className={`${mobile ? 'block w-full sm:hidden shadow-l rounded-xl p-4 bg-zinc-900 text-white' :  'shadow-l rounded-xl p-4 bg-zinc-900 text-white hidden sm:block' }`} onClick={logout}>Cerrar sesión</Button>
   );
 
   return (
@@ -46,9 +46,10 @@ function Dashboard() {
         grid
         grid-cols-1
         grid-rows-[auto_1fr]
-
+        bg-zinc-900
         sm:gap-3
         sm:grid-cols-[256px_1fr]
+
       "
     >
       <header
@@ -57,14 +58,14 @@ function Dashboard() {
           items-center
           justify-between
           p-4
-          shadow
-          rounded
-          bg-white
+          shadow-l
+          rounded-xl
+          bg-zinc-900
 
           sm:col-span-2
         "
       >
-        <h1 className="text-2xl font-bold text-gray-900">Panel Administrativo</h1>
+        <h1 className="text-2xl font-bold text-zinc-50">Panel Administrativo</h1>
         {renderLogoutButton()}
         <button
           className="
@@ -82,12 +83,12 @@ function Dashboard() {
           absolute
           top-0
           bottom-0
-          bg-white
+          bg-zinc-900
           w-64
           p-6
           ${openMenu ? 'left-0' : 'left-[-256px]'}
-          rounded
-          shadow
+          rounded-lg
+          shadow-l
           flex
           flex-col
           justify-between
@@ -98,7 +99,7 @@ function Dashboard() {
       >
         <nav>
           <ul
-            className='flex flex-col'
+            className='flex flex-col gap-2'
           >
             <li>
               <NavLink
