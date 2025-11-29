@@ -133,18 +133,18 @@ function OrderDetailModal({ order, onClose }) {
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case 'pending':
-        return 'bg-yellow-50 border border-yellow-200 text-yellow-800';
+        return 'bg-yellow-950 border border-yellow-200 text-yellow-200';
       case 'confirmed':
       case 'enviado':
-        return 'bg-blue-50 border border-blue-200 text-blue-800';
+        return 'bg-blue-950 border border-blue-200 text-blue-200';
       case 'delivered':
       case 'entregado':
-        return 'bg-green-50 border border-green-200 text-green-800';
+        return 'bg-green-950 border border-green-200 text-green-200';
       case 'cancelled':
       case 'cancelado':
-        return 'bg-red-50 border border-red-200 text-red-800';
+        return 'bg-red-950 border border-red-200 text-red-200';
       default:
-        return 'bg-gray-50 border border-gray-200 text-gray-800';
+        return 'bg-gray-950 border border-gray-200 text-gray-200';
     }
   };
 
@@ -158,21 +158,21 @@ function OrderDetailModal({ order, onClose }) {
 
       {/* Modal */}
       <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="bg-zinc-900 rounded-lg shadow-s max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           
           {/* Header del modal */}
-          <div className="flex justify-between items-center p-6 border-b border-gray-200 sticky top-0 bg-white">
+          <div className="flex justify-between items-center p-6 border-b border-gray-200 sticky top-0 bg-zinc-900">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-2xl font-bold text-zinc-50">
                 Detalle de Orden
               </h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-zinc-200 mt-1">
                 Orden #{order.id?.substring(0, 8) || 'N/A'}
               </p>
             </div>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 text-2xl"
+              className="text-gray-500 hover:text-zinc-200 text-2xl"
             >
               ×
             </button>
@@ -184,9 +184,9 @@ function OrderDetailModal({ order, onClose }) {
             {loading && (
               <div className="text-center py-8">
                 <div className="inline-block animate-spin mb-4">
-                  <div className="h-8 w-8 border-4 border-purple-600 border-t-transparent rounded-full"></div>
+                  <div className="h-8 w-8 border-4 border-white border-t-transparent rounded-full"></div>
                 </div>
-                <p className="text-gray-600">Cargando detalles de la orden...</p>
+                <p className="text-zinc-200">Cargando detalles de la orden...</p>
               </div>
             )}
 
@@ -194,19 +194,19 @@ function OrderDetailModal({ order, onClose }) {
               <>
             
             {/* Información general de la orden */}
-            <div className="bg-gradient-to-r from-purple-50 to-transparent p-4 rounded-lg">
+            <div className="bg-zinc-900 p-4 rounded-lg">
               <div className="grid grid-cols-2 gap-4">
                 {/* Fecha */}
                 <div>
-                  <p className="text-sm text-gray-600 font-semibold">Fecha de Orden</p>
-                  <p className="text-gray-900 mt-1">
+                  <p className="text-sm text-zinc-200 font-semibold">Fecha de Orden</p>
+                  <p className="text-zinc-50 mt-1">
                     {formatDate(order.date)}
                   </p>
                 </div>
 
                 {/* Estado */}
                 <div>
-                  <p className="text-sm text-gray-600 font-semibold">Estado</p>
+                  <p className="text-sm text-zinc-200 font-semibold">Estado</p>
                   <div className="mt-1">
                     <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(order.status)}`}>
                       {getStatusLabel(order.status)}
@@ -216,16 +216,16 @@ function OrderDetailModal({ order, onClose }) {
 
                 {/* Cliente */}
                 <div>
-                  <p className="text-sm text-gray-600 font-semibold">Cliente</p>
-                  <p className="text-gray-900 mt-1">
+                  <p className="text-sm text-zinc-200 font-semibold">Cliente</p>
+                  <p className="text-zinc-50 mt-1">
                     {order.customerName}
                   </p>
                 </div>
 
                 {/* Total */}
                 <div>
-                  <p className="text-sm text-gray-600 font-semibold">Total</p>
-                  <p className="text-purple-600 font-bold text-2xl mt-1">
+                  <p className="text-sm text-zinc-200 font-semibold">Total</p>
+                  <p className="text-zinc-50 font-semibold text-2xl mt-1">
                     ${(order.totalAmount || total).toFixed(2)}
                   </p>
                 </div>
@@ -234,12 +234,12 @@ function OrderDetailModal({ order, onClose }) {
 
             {/* Productos en la orden */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Productos</h3>
+              <h3 className="text-lg font-semibold text-zinc-50 mb-4">Productos</h3>
               
               {orderItems && orderItems.length > 0 ? (
                 <div className="space-y-3">
                   {/* Encabezado de tabla */}
-                  <div className="grid grid-cols-12 gap-4 px-4 py-2 bg-gray-100 rounded-lg font-semibold text-sm text-gray-700">
+                  <div className="grid grid-cols-12 gap-4 px-4 py-2 bg-zinc-900 rounded-lg font-semibold text-sm text-zinc-200">
                     <div className="col-span-6">Producto</div>
                     <div className="col-span-2 text-center">Cantidad</div>
                     <div className="col-span-2 text-right">Precio Unit.</div>
@@ -253,10 +253,10 @@ function OrderDetailModal({ order, onClose }) {
                     const subtotal = unitPrice * quantity;
 
                     return (
-                      <div key={index} className="grid grid-cols-12 gap-4 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+                      <div key={index} className="grid grid-cols-12 gap-4 px-4 py-3 border border-gray-200 rounded-lg transition">
                         {/* Nombre del producto */}
                         <div className="col-span-6">
-                          <p className="text-gray-900 font-medium">
+                          <p className="text-zinc-50 font-medium">
                             {item.productName || item.ProductName || `Producto ${index + 1}`}
                           </p>
                           <p className="text-xs text-gray-500 mt-1">
@@ -266,21 +266,21 @@ function OrderDetailModal({ order, onClose }) {
 
                         {/* Cantidad */}
                         <div className="col-span-2 text-center">
-                          <p className="text-gray-900 font-semibold">
+                          <p className="text-zinc-50 font-semibold">
                             {quantity}
                           </p>
                         </div>
 
                         {/* Precio unitario */}
                         <div className="col-span-2 text-right">
-                          <p className="text-gray-900">
+                          <p className="text-zinc-50">
                             ${unitPrice.toFixed(2)}
                           </p>
                         </div>
 
                         {/* Subtotal */}
                         <div className="col-span-2 text-right">
-                          <p className="text-gray-900 font-semibold">
+                          <p className="text-zinc-50 font-semibold">
                             ${subtotal.toFixed(2)}
                           </p>
                         </div>
@@ -289,18 +289,18 @@ function OrderDetailModal({ order, onClose }) {
                   })}
 
                   {/* Total */}
-                  <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-purple-50 border border-purple-200 rounded-lg font-semibold">
-                    <div className="col-span-8 text-right">
+                  <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-zinc-900  rounded-lg font-semibold">
+                    <div className="col-span-8 text-right text-zinc-50">
                       TOTAL:
                     </div>
-                    <div className="col-span-4 text-right text-purple-600 text-lg">
+                    <div className="col-span-4 text-right text-zinc-50 text-lg">
                       ${(order.totalAmount || total).toFixed(2)}
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="bg-gray-50 rounded-lg p-6 text-center">
-                  <p className="text-gray-600">
+                <div className="bg-zinc-900 rounded-lg p-6 text-center">
+                  <p className="text-zinc-200">
                     No hay información de productos disponible
                   </p>
                 </div>
@@ -310,20 +310,20 @@ function OrderDetailModal({ order, onClose }) {
             {/* Información de envío y facturación */}
             {(order.shippingAddress || order.ShippingAddress || order.billingAddress || order.BillingAddress) && (
               <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Información de Envío</h3>
+                <h3 className="text-lg font-semibold text-zinc-50 mb-4">Información de Envío</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {(order.shippingAddress || order.ShippingAddress) && (
                     <div className="bg-gray-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-semibold mb-2">Dirección de Envío</p>
-                      <p className="text-gray-900 text-sm">
+                      <p className="text-sm text-zinc-200 font-semibold mb-2">Dirección de Envío</p>
+                      <p className="text-zinc-50 text-sm">
                         {order.shippingAddress || order.ShippingAddress}
                       </p>
                     </div>
                   )}
                   {(order.billingAddress || order.BillingAddress) && (
                     <div className="bg-gray-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-semibold mb-2">Dirección de Facturación</p>
-                      <p className="text-gray-900 text-sm">
+                      <p className="text-sm text-zinc-200 font-semibold mb-2">Dirección de Facturación</p>
+                      <p className="text-zinc-50 text-sm">
                         {order.billingAddress || order.BillingAddress}
                       </p>
                     </div>
@@ -335,9 +335,9 @@ function OrderDetailModal({ order, onClose }) {
             {/* Notas */}
             {(order.notes || order.Notes) && (
               <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Notas</h3>
+                <h3 className="text-lg font-semibold text-zinc-50 mb-4">Notas</h3>
                 <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                  <p className="text-gray-900 text-sm">
+                  <p className="text-zinc-50 text-sm">
                     {order.notes || order.Notes}
                   </p>
                 </div>
@@ -348,10 +348,10 @@ function OrderDetailModal({ order, onClose }) {
           </div>
 
           {/* Footer del modal */}
-          <div className="px-6 py-4 border-t border-gray-200 flex justify-end bg-gray-50">
+          <div className="px-6 py-4 flex justify-end bg-zinc-900">
             <button
               onClick={onClose}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold py-2 px-6 rounded-lg transition"
+              className="shadow-s rounded-xl p-4 bg-zinc-900 text-white font-semibold hover:bg-zinc-800 transition text-sm"
             >
               Cerrar
             </button>
