@@ -10,6 +10,7 @@ import OrdersHistoryPage from './modules/orders/pages/OrdersHistoryPage';
 import Home from './modules/home/pages/Home';
 import ListProductsPage from './modules/products/pages/ListProductsPage';
 import CreateProductPage from './modules/products/pages/CreateProductPage';
+import SignupPage from './modules/auth/pages/SignupPage';
 
 function App() {
   const router = createBrowserRouter([
@@ -28,6 +29,10 @@ function App() {
     {
       path: '/login',
       element: <LoginPage />,
+    },
+    {
+      path: '/signup',
+      element: <SignupPage />,
     },
     {
       path: '/admin',

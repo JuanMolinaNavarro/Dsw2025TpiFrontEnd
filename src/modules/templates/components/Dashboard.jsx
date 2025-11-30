@@ -43,6 +43,7 @@ function Dashboard() {
     <div
       className="
         h-full
+        min-h-screen
         grid
         grid-cols-1
         grid-rows-[auto_1fr]
@@ -69,14 +70,22 @@ function Dashboard() {
         {renderLogoutButton()}
         <button
           className="
-            bg-transparent
-            border-none
-            shadow-none
-
             sm:hidden
+            rounded-xl
+            bg-zinc-900
+            p-3
+            text-white
+            shadow-s
+            transition
+            hover:bg-zinc-800
+            border
+            border-zinc-800
           "
           onClick={() => setOpenMenu(!openMenu)}
-        >{ openMenu ? <span>&#215;</span> : <span>&#9776;</span>}</button>
+          aria-label={openMenu ? 'Cerrar menu' : 'Abrir menu'}
+        >
+          {openMenu ? '✕' : '☰'}
+        </button>
       </header>
       <aside
         className={`
@@ -84,17 +93,21 @@ function Dashboard() {
           top-0
           bottom-0
           bg-zinc-900
-          w-64
+          w-72
+          sm:w-64
           p-6
-          ${openMenu ? 'left-0' : 'left-[-256px]'}
+          ${openMenu ? 'left-0' : 'left-[-288px]'}
           rounded-lg
           shadow-l
           flex
           flex-col
           justify-between
 
-          sm:relative
+          sm:static
           sm:left-0
+          sm:top-auto
+          sm:bottom-auto
+          sm:h-full
         `}
       >
         <nav>
@@ -128,6 +141,7 @@ function Dashboard() {
         className="
           p-5
           overflow-y-scroll
+          sm:h-full
         "
       >
         <Outlet />

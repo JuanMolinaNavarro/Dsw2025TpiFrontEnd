@@ -116,6 +116,15 @@ function LoginForm() {
         {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
       </Button>
 
+      <Button 
+        variant='secondary'
+        onClick={() => navigate('/signup')}
+        type='button'
+        className='shadow-l rounded-xl p-4 bg-zinc-900 text-white hover:bg-zinc-800'
+      >
+        Crear Cuenta
+      </Button>
+
       {/* Mensaje de error */}
       {errorMessage && (
         <div className="bg-red-950 border border-red-200 text-red-200 px-4 py-3 rounded">

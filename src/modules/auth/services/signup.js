@@ -1,39 +1,36 @@
 import { instance } from '../../shared/api/axiosInstance';
 
 /**
- * Servicio para registrar un nuevo cliente
- * Solo registra clientes, no administradores
- * 
- * @param {string} userName - Nombre de usuario
- * @param {string} email - Email del usuario
- * @param {string} password - Contraseña del usuario
- * @param {string} displayName - Nombre mostrado del usuario
- * @param {string} phoneNumber - Número de teléfono del usuario
- * @returns {Promise<{data: string | null, error: null | object}>} Token JWT si es exitoso, error si falla
+ * Servicio para registrar un nuevo usuario.
+ * Por defecto crea clientes, pero permite especificar el rol.
+ *
+ * @param {string} userName - Nombre de usuario.
+ * @param {string} email - Email del usuario.
+ * @param {string} password - Contrasena del usuario.
+ * @param {string} displayName - Nombre mostrado del usuario (se usa userName si no se envia).
+ * @param {string} phoneNumber - Numero de telefono del usuario.
+ * @param {string} role - Rol del usuario (Administrador | Cliente). Por defecto Cliente.
+ * @returns {Promise<{data: string | null, error: null | object}>} Token JWT si es exitoso, error si falla.
  */
-export const signup = async (userName, email, password, displayName, phoneNumber) => {
+export const signup = async (userName, email, password, displayName, phoneNumber, role = 'Cliente') => {
   try {
-    // Realizamos una petición POST al endpoint de registro
-    // El role siempre es "Cliente" para registros desde el modal
     const response = await instance.post('api/auth/register', {
       userName,
       password,
       email,
-      displayName,
+      displayName: displayName || userName,
       phoneNumber,
-      role: 'Cliente',
+      role,
     });
 
-    // Retornamos el token y null como error
-    return { 
-      data: response.data.token, 
-      error: null 
+    return {
+      data: response.data.token,
+      error: null,
     };
   } catch (error) {
-    // Si hay un error, lo retornamos
-    return { 
-      data: null, 
-      error: error.response?.data || error.message 
+    return {
+      data: null,
+      error: error.response?.data || error.message,
     };
   }
 };
