@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
+import ProductCard from '../components/ProductCard';
 import { getProducts } from '../services/list';
 
 const productStatus = {
@@ -23,6 +24,7 @@ function ListProductsPage() {
 
   const [loading, setLoading] = useState(false);
 
+  //cargar productos
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -40,8 +42,15 @@ function ListProductsPage() {
   };
 
   useEffect(() => {
+    setPageNumber(1);
     fetchProducts();
-  }, [status, pageSize, pageNumber]);
+  }, [status, pageSize]);
+
+  useEffect(() => {
+    if (pageNumber > 1) {
+      fetchProducts();
+    }
+  }, [pageNumber]);
 
   const totalPages = Math.ceil(total / pageSize);
 
@@ -87,18 +96,17 @@ function ListProductsPage() {
         </div>
       </Card>
 
-      <div className='mt-4 flex flex-col gap-4'>
-        {
-          loading
-            ? <span>Buscando datos...</span>
-            : products.map(product => (
-              <Card key={product.sku}>
-                <h1>{product.sku} - {product.name}</h1>
-                <p className='text-base'>Stock: {product.stockQuantity} - ${product.currentUnitPrice} - {product.isActive ? 'Activado' : 'Desactivado'}</p>
-              </Card>
-            ))
-        }
-      </div>
+  <div className='mt-4 flex flex-col gap-4'>
+      {
+          loading 
+              ? (<span>Buscando datos...</span>)
+              : products && products.length > 0
+                  ? products.map(product => (
+                      <ProductCard key={product.sku} product={product} />
+                    ))
+                  : (<span className='text-gray-500'>No hay productos disponibles</span>)
+     }
+ </div>
 
       <div className='flex justify-center items-center mt-3'>
         <button

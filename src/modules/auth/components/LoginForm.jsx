@@ -18,9 +18,9 @@ function LoginForm() {
 
   const { singin } = useAuth();
 
-  const onValid = async (formData) => {
+  const onValid = async (formData) => { // se ejcuta cuando el form es valido
     try {
-      const { error } = await singin(formData.username, formData.password);
+      const { error } = await singin(formData.username, formData.password); // incia session
 
       if (error) {
         setErrorMessage(error.frontendErrorMessage);
@@ -28,10 +28,10 @@ function LoginForm() {
         return;
       }
 
-      navigate('/admin/home');
+      navigate('/admin/home'); // redirige a la pagina de inicio del admin (despues de iniciar sesion)
     } catch (error) {
       if (error?.response?.data?.code) {
-        setErrorMessage(frontendErrorMessage[error?.response?.data?.code]);
+        setErrorMessage(frontendErrorMessage[error?.response?.data?.code]); 
       } else {
         setErrorMessage('Llame a soporte');
       }
@@ -59,7 +59,7 @@ function LoginForm() {
         }) }
         error={errors.username?.message}
       />
-      <Input
+      <Input // valida la contraseña que no este vacia
         label='Contraseña'
         { ...register('password', {
           required: 'Contraseña es obligatorio',

@@ -28,14 +28,14 @@ function CreateProductForm() {
 
   const onValid = async (formData) => {
     try {
+      setErrorBackendMessage('');
       await createProduct(formData);
 
       navigate('/admin/products');
     } catch (error) {
-      if (error.response?.data?.detail) {
+      if (error.response?.data?.code) {
         const errorMessage = frontendErrorMessage[error.response.data.code];
-
-        setErrorBackendMessage(errorMessage);
+        setErrorBackendMessage(errorMessage || error.response.data.message || 'Error al crear el producto');
       } else {
         setErrorBackendMessage('Contactar a Soporte');
       }
@@ -84,21 +84,27 @@ function CreateProductForm() {
           label='Precio'
           error={errors.price?.message}
           type='number'
+          step='0.01'
           {...register('price', {
+            required: 'Precio es requerido',
             min: {
               value: 0,
-              message: 'No puede tener un precio negativo',
+              message: 'El precio debe ser mayor a 0',
             },
+            validate: (value) => value > 0 || 'El precio debe ser mayor a 0',
           })}
         />
         <Input
           label='Stock'
           error={errors.stock?.message}
+          type='number'
           {...register('stock', {
+            required: 'Stock es requerido',
             min: {
               value: 0,
-              message: 'No puede tener un stock negativo',
+              message: 'El stock no puede ser negativo',
             },
+            validate: (value) => value >= 0 || 'El stock no puede ser negativo',
           })}
         />
         <div className='sm:text-end'>

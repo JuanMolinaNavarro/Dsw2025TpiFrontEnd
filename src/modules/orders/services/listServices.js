@@ -1,19 +1,36 @@
-export const listOrders = async () => {
-  const response = await fetch('/api/orders', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    },
+import { instance } from '../../shared/api/axiosInstance';
+
+export const listOrders = async (search = null, status = null, pageNumber = 1, pageSize = 10) => {
+  const queryString = new URLSearchParams({
+    search,
+    status,
+    pageNumber,
+    pageSize,
   });
 
-  if (response.ok) {
-    const data = await response.json();
+  try {
+    const response = await instance.get(`/api/orders?${queryString}`);
 
-    return { data, error: null };
-  } else {
-    const error = await response.json();
-
-    return { data: null, error };
+    return { 
+      data: { 
+        orderItems: response.data.items, 
+        total: response.data.totalCount 
+      }, 
+      error: null 
+    };
+  } catch (error) {
+    // Si no hay órdenes, devolver lista vacía
+    if (error.response?.status === 400 && error.response?.data?.code === 'NO_ORDERS_AVAILABLE') {
+      return { 
+        data: { 
+          orderItems: [], 
+          total: 0 
+        }, 
+        error: null 
+      };
+    }
+    
+    console.error('Error fetching orders:', error);
+    return { data: null, error: error };
   }
 };
