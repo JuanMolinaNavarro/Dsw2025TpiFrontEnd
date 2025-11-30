@@ -33,12 +33,6 @@ function CartPage() {
 
   const loadCart = () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setCartItems([]);
-        localStorage.removeItem("cart");
-        return;
-      }
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       setCartItems(cart);
     } catch (err) {
