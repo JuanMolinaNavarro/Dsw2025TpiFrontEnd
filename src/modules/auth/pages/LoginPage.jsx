@@ -8,8 +8,7 @@ function LoginPage() {
       justify-center
       min-h-screen
       bg-gradient-to-br
-      from-blue-500
-      to-purple-600
+      bg-neutral-100
       items-center
     '>
       <LoginForm />

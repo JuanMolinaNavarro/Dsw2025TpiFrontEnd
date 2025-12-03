@@ -18,19 +18,16 @@ function Home() {
       setLoading(true);
       setError(null);
       
-      console.log('Iniciando carga de estadísticas...');
-      
       // Obtenemos los conteos por separado para identificar cuál falla
       let products = 0;
       let orders = 0;
       
       try {
-           console.log('Obteniendo productos...');
+           
   
-          const { data, error } = await getProducts(null, null, 1, 1); // pedimos 1 producto, solo necesitamos total
+          const { data, error } = await getProducts(null, null, 1, 1); //solo necesitamos total
           if (error) throw error;
 
-          console.log('Productos obtenidos:', data.total);
           setProductsCount(data.total);
          } catch (err) {
           console.error('Error al obtener productos:', err);
@@ -40,9 +37,9 @@ function Home() {
 
       
       try {
-        console.log(' Obteniendo órdenes...');
+        
         orders = await getOrdersCount();
-        console.log('Órdenes obtenidas:', orders);
+        
         setOrdersCount(orders);
       } catch (err) {
         console.error('Error al obtener órdenes:', err);

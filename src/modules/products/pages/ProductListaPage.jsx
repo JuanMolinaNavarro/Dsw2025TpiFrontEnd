@@ -10,18 +10,20 @@ function ProductListPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [quantities, setQuantities] = useState({});
+ const [pageSize, setPageSize] = useState(3);
 
   useEffect(() => {
     loadProducts();
-  }, [currentPage]);
+  }, [currentPage, searchTerm, pageSize]);
 
   const loadProducts = async () => {
     setLoading(true);
     try {
       const { data, error } = await getPublicProducts(
         currentPage,
-        12,
+        pageSize,
         searchTerm
       );
 
@@ -37,9 +39,10 @@ function ProductListPage() {
         return;
       }
 
-      console.log('Productos cargados:', data.products);
+     
       setProducts(data.products || []);
       setTotalPages(data.totalPages || 1);
+      setTotalCount(data.totalCount || 0);
 
       const initialQuantities = {};
       (data.products || []).forEach(product => {
@@ -58,7 +61,11 @@ function ProductListPage() {
   const handleSearch = (e) => {
     e.preventDefault();
     setCurrentPage(1);
-    loadProducts();
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
   };
 
   const increment = (productId) => {
@@ -113,6 +120,52 @@ function ProductListPage() {
     });
   };
 
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePageSizeChange = (e) => {
+    setPageSize(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
+  // Generar array de números de página para mostrar
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisible = 5;
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push('...');
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push('...');
+        pages.push(currentPage - 1);
+        pages.push(currentPage);
+        pages.push(currentPage + 1);
+        pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+
+    return pages;
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
@@ -125,26 +178,26 @@ function ProductListPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Barra de búsqueda */}
       <div className="bg-white border-b border-gray-200 py-6 mb-6">
-      <div className="container mx-auto px-4">
-      <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-      <div className="flex gap-2">
-        <input
-          type="text"
-          placeholder="Buscar productos..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300"
-        />
-        <button
-          type="submit"
-          className="px-6 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-gray-700 transition font-medium"
-        >
-          Buscar
-        </button>
+        <div className="container mx-auto px-4">
+          <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Buscar productos..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300"
+              />
+              <button
+                type="submit"
+                className="px-6 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition font-medium"
+              >
+                Buscar
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </form>
-  </div>
-</div>
 
       {/* Grid de productos */}
       <div className="container mx-auto px-4 pb-12">
@@ -222,25 +275,58 @@ function ProductListPage() {
         {/* Paginación */}
         {totalPages > 1 && (
           <div className="flex justify-center items-center gap-4 mt-10">
+            {/* Botón Atrás */}
             <button
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-5 py-2.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium text-gray-700"
+              className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
-              Anterior
+              Atrás
             </button>
 
-            <span className="text-gray-700 font-medium px-4">
-              Página {currentPage} de {totalPages}
-            </span>
+            {/* Números de página */}
+            <div className="flex gap-1">
+              {getPageNumbers().map((page, index) => (
+                page === '...' ? (
+                  <span key={`ellipsis-${index}`} className="px-3 py-2 text-gray-500">
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`min-w-[40px] px-3 py-2 rounded transition ${
+                      currentPage === page
+                        ? 'bg-gray-600 text-white'
+                        : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                )
+              ))}
+            </div>
 
+            {/* Botón Siguiente */}
             <button
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="px-5 py-2.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium text-gray-700"
+              className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               Siguiente
             </button>
+
+            {/* Select de productos por página */}
+            <select
+              value={pageSize}
+              onChange={handlePageSizeChange}
+              className="px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-200 cursor-pointer"
+            >
+              <option value={2}>2</option>
+              <option value={10}>10</option>
+              <option value={15}>15</option>
+              <option value={20}>20</option>
+            </select>
           </div>
         )}
       </div>

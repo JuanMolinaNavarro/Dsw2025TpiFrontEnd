@@ -37,7 +37,7 @@ export const getProducts = async (search = null, status = null, pageNumber = 1, 
   }
 };
 
-// FUNCIÓN: Para clientes/público (sin autenticación)
+// Para clientes/público (sin autenticación)
 export const getPublicProducts = async (page = 1, limit = 12, search = '') => {
   const queryParams = new URLSearchParams();
   

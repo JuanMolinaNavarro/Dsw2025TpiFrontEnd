@@ -27,7 +27,7 @@ function Header() {
             <span className="text-xl sm:text-2xl font-bold text-gray-800">DSW Tienda</span>
           </Link>
           
-          {/* Botón hamburguesa para móvil */}
+          {/* Botón para móvil */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden text-gray-700 hover:text-gray-900 focus:outline-none"
@@ -52,12 +52,8 @@ function Header() {
             
             {isAuthenticated ? (
               <>
-                {role === 'Cliente' && (
-                  <Link to="/my-orders" className="hover:text-purple-600 transition text-sm lg:text-base text-gray-700 font-medium">
-                    Mis Órdenes
-                  </Link>
-                )}
                 
+
                 {role === 'Administrador' && (
                   <Link to="/admin" className="hover:text-purple-600 transition text-sm lg:text-base text-gray-700 font-medium">
                     Panel Admin
@@ -112,16 +108,8 @@ function Header() {
               
               {isAuthenticated ? (
                 <>
-                  {role === 'Cliente' && (
-                    <Link 
-                      to="/my-orders" 
-                      className="hover:text-purple-600 transition py-2 text-gray-700 font-medium"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Mis Órdenes
-                    </Link>
-                  )}
                   
+
                   {role === 'Administrador' && (
                     <Link 
                       to="/admin" 
@@ -137,7 +125,7 @@ function Header() {
                     <div className="text-xs text-gray-500 mb-3">{role}</div>
                     <button
                       onClick={handleLogout}
-                      className="w-full bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                      className="w-full bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
                     >
                       Cerrar Sesión
                     </button>
@@ -169,6 +157,7 @@ function Header() {
           </nav>
         )}
       </div>
+
       <LoginModal 
         isOpen={showLoginModal} 
         onClose={() => setShowLoginModal(false)}

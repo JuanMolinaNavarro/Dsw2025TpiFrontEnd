@@ -30,8 +30,6 @@ function ListProductsPage() {
 
     if (error) throw error;
 
-    console.log("RESPONSE DATA (FULL):", JSON.stringify(data, null, 2));
-
     setTotal(data.total ?? 0);
     setProducts(data.productItems ?? []);
 
@@ -41,9 +39,6 @@ function ListProductsPage() {
     setLoading(false);
   }
 };
-
-
-
 
   useEffect(() => {
     fetchProducts();
@@ -100,8 +95,6 @@ function ListProductsPage() {
      loading
       ? <span>Buscando datos...</span>
       : products.map(product => {
-          console.log("PRODUCT:", product);
-
           return (
             <Card key={product.sku}>
               <h1>{product.sku} - {product.name}</h1>
@@ -121,7 +114,7 @@ function ListProductsPage() {
           onClick={() => setPageNumber(pageNumber - 1)}
           className='bg-gray-200 disabled:bg-gray-100'
         >
-          Atras
+          Anterior
         </button>
         <span>{pageNumber} / {totalPages}</span>
         <button

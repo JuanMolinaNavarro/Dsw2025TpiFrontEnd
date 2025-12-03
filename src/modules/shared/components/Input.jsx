@@ -1,5 +1,5 @@
 function Input({ label, error = '', ...restProps }) {
-  const { name } = restProps; // nombre del input de React Hook Form
+  const { name } = restProps; 
 
   return (
     <div className="flex flex-col gap-1 w-full">

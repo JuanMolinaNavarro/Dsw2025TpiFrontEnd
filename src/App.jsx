@@ -6,14 +6,11 @@ import RegisterPage from './modules/auth/pages/RegisterPage';
 import Dashboard from './modules/templates/components/Dashboard';
 import ProtectedRoute from './modules/auth/components/ProtectedRoute';
 import ListOrdersPage from './modules/orders/pages/ListOrdersPage';
-//import OrderDetailPage from './modules/orders/pages/OrderDetailPage';
 import Home from './modules/home/pages/Home';
 import ListProductsPage from './modules/products/pages/ListProductsPage';
 import CreateProductPage from './modules/products/pages/CreateProductPage';
-//import EditProductPage from './modules/products/pages/EditProductPage';
 import ProductsListPage from './modules/products/pages/ProductListaPage';
 import CartPage from './modules/customer/pages/CartPage';
-import MyOrdersPage from './modules/orders/pages/MyOrdersPage';
 import Header from './modules/shared/components/Header';
 import Footer from './modules/shared/components/Footer';
 
@@ -47,16 +44,7 @@ function App() {
           path: '/cart',
           element: <CartPage />,
         },
-        {
-          // Mis órdenes - Solo para clientes autenticados
-          path: '/my-orders',
-          element: <MyOrdersPage />,
-        },
-        //{
-          // Detalle de orden para cliente
-          //path: '/order/:orderId',
-          //element: <OrderDetailPage />,
-        //},
+
       ],
     },
 
@@ -93,19 +81,13 @@ function App() {
           path: 'products/create',
           element: <CreateProductPage />,
         },
-       // {
-         // path: 'products/edit/:productId',
-          //element: <EditProductPage />,
-        //},
+       
         {
           // Gestión de órdenes
           path: 'orders',
           element: <ListOrdersPage />,
         },
-        //{
-          //path: 'orders/:orderId',
-          //element: <OrderDetailPage />,
-        //},
+      
       ],
     },
   ]);

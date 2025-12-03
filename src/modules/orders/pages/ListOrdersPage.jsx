@@ -30,8 +30,6 @@ function ListOrdersPage() {
     try {
       const response = await getOrders(searchTerm, status, pageNumber, pageSize);
 
-      console.log("ORDERS RESPONSE:", response);
-
       if (!response?.data) {
         console.error("No hay data desde la API");
         return;
@@ -135,7 +133,7 @@ function ListOrdersPage() {
           onClick={() => setPageNumber(pageNumber - 1)}
           className="px-4 py-2 bg-gray-200 rounded disabled:bg-gray-100 disabled:text-gray-400"
         >
-          Previous
+          Anterior
         </button>
 
         <span className="px-4">
@@ -147,7 +145,7 @@ function ListOrdersPage() {
           onClick={() => setPageNumber(pageNumber + 1)}
           className="px-4 py-2 bg-gray-200 rounded disabled:bg-gray-100 disabled:text-gray-400"
         >
-          Next
+          Siguiente
         </button>
 
         <select

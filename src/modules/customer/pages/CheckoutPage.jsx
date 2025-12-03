@@ -35,7 +35,7 @@ function CheckoutPage() {
     setLoading(true);
 
     try {
-      // Construir dirección de envío (formato exacto del backend)
+      // Construir dirección de envío (formato del backend)
       const shippingAddress = `Calle: ${formData.shippingStreet.trim()}, Altura: ${formData.shippingNumber.trim()}, Ciudad: ${formData.shippingCity.trim()}, Provincia: ${formData.shippingProvince.trim()}`;
       
       // Construir dirección de facturación

@@ -74,11 +74,12 @@ function RegisterForm() {
         flex-col
         gap-4
        bg-white
-        p-8
+        p-6
         w-full
         max-w-md
-        sm:rounded-lg
-        sm:shadow-lg
+        mx-auto      
+        rounded-lg   
+        shadow-lg
       '
       onSubmit={handleSubmit(onValid)}
     >

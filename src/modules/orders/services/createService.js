@@ -3,15 +3,15 @@ import { handleApiError } from '../../shared/helpers/errorMessages';
 
 export const createOrder = async (orderData) => {
   try {
-    console.log('Creating order with data:', orderData);
+    console.log('Creando orden:', orderData);
     
     const response = await instance.post('/api/orders', orderData);
 
-    console.log('Order created successfully:', response.data);
+    console.log('Order creaada exitosamente:', response.data);
 
     return { data: response.data, error: null };
   } catch (error) {
-    console.error('Error creating order:', error);
+    console.error('Error al crear la orden:', error);
     return { 
       data: null, 
       error: handleApiError(error)

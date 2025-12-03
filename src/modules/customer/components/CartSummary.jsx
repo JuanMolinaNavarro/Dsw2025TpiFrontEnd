@@ -1,4 +1,3 @@
-// modules/customer/components/CartSummary.jsx
 import React from 'react';
 import { getTotalItems, getTotalPrice } from '../helpers/cartHelpers';
 import '../../../templates/elements.css';

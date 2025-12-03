@@ -65,18 +65,20 @@ function LoginForm() {
   };
 
   return (
-    <form className='
+    <form 
+      className='
         flex
         flex-col
-        gap-20
+        gap-5
         bg-white
-        p-8
-        sm:w-md
-        sm:gap-4
-        sm:rounded-lg
-        sm:shadow-lg
+        p-6
+        w-full
+        max-w-md
+        mx-auto
+        rounded-lg
+        shadow-lg
       '
-    onSubmit={handleSubmit(onValid)}
+      onSubmit={handleSubmit(onValid)}
     >
       <Input
         label='Usuario'
@@ -86,7 +88,7 @@ function LoginForm() {
         error={errors.username?.message}
       />
       <Input
-        label='Contraseña'
+        label='Password'
         { ...register('password', {
           required: 'Contraseña es obligatorio',
         }) }
@@ -99,8 +101,8 @@ function LoginForm() {
       <div className='flex flex-col gap-2 items-center'>
         <p className='text-gray-600 text-sm'>¿No tienes cuenta?</p>
         <Link to='/signup' className='w-full'>
-          <Button type='button' className='w-full bg-green-500 hover:bg-green-600'>
-            Registrarse
+          <Button type='button' className='w-full bg-gray-400 hover:bg-gray-500 text-black'>
+            Registrar Usuario
           </Button>
         </Link>
       </div>

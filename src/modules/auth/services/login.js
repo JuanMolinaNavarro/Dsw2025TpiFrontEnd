@@ -6,8 +6,6 @@ export const login = async (username, password) => {
       username, 
       password 
     });
-    
-    console.log('🔍 Response completa del backend:', response.data);
 
     const { token, role, customerId } = response.data;
     
@@ -26,7 +24,7 @@ export const login = async (username, password) => {
       status: error.response?.status
     });
     
-    // Importar handleApiError si no está importado
+    // Importar handleApiError
     const { handleApiError } = await import('../../shared/helpers/errorMessages');
     
     return { 

@@ -54,7 +54,7 @@ function Dashboard() {
           sm:col-span-2
         "
       >
-        <span>Home Administrador</span>
+        <span>Panel Administrador</span>
         {renderLogoutButton()}
         <button
           className="

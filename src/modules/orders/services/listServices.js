@@ -57,15 +57,3 @@ export const getOrderById = async (id) => {
   }
 };
 
-/**
- * Actualiza el estado de una orden
- */
-export const updateOrderStatus = async (id, newStatus) => {
-  try {
-    const response = await instance.put(`/api/orders/${id}/status`, { newStatus });
-    return response.data;
-  } catch (error) {
-    console.error('Error al actualizar estado de orden:', error);
-    throw error;
-  }
-};

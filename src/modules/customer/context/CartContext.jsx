@@ -12,35 +12,27 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const { customerId } = useAuth(); // Observamos el customerId del AuthContext
-  const [cartItems, setCartItems] = useState([]);
-
-  // Cargar carrito desde localStorage al iniciar o al cambiar de cliente
-  useEffect(() => {
-    if (customerId) {
-      const savedCart = localStorage.getItem('cart');
-      if (savedCart) {
-        try {
-          setCartItems(JSON.parse(savedCart));
-        } catch (error) {
-          console.error('Error al cargar carrito:', error);
-          localStorage.removeItem('cart');
-          setCartItems([]);
-        }
-      } else {
-        setCartItems([]);
+  const { customerId } = useAuth();
+  
+  // Inicializar carrito desde localStorage (sin depender de customerId)
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      try {
+        return JSON.parse(savedCart);
+      } catch (error) {
+        console.error('Error al cargar carrito:', error);
+        localStorage.removeItem('cart');
+        return [];
       }
-    } else {
-      setCartItems([]); // Limpiar carrito si no hay cliente
     }
-  }, [customerId]);
+    return [];
+  });
 
-  // Guardar carrito en localStorage cuando cambie
+  // Guardar carrito en localStorage cuando cambie (no solo si hay customerId)
   useEffect(() => {
-    if (customerId) {
-      localStorage.setItem('cart', JSON.stringify(cartItems));
-    }
-  }, [cartItems, customerId]);
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = (product, quantity = 1) => {
     setCartItems(prevItems => {

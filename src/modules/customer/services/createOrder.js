@@ -27,10 +27,7 @@ export const createOrder = async (items, total) => {
         name: item.name
       })),
       total: total,
-      // status: 'pending',
-      // paymentMethod: 'card',
-      // shippingAddress: {...},
-      // etc.
+      
     };
 
     const response = await fetch('/api/orders', {
@@ -42,7 +39,7 @@ export const createOrder = async (items, total) => {
       body: JSON.stringify(orderData)
     });
 
-    // Si la respuesta no es ok, lanzar error
+    
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || 'Error al crear la orden');

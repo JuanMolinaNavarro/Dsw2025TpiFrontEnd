@@ -54,7 +54,7 @@ export const addToCart = (product, quantity) => {
       name: product.name,
       price: product.price,
       quantity: quantity,
-      // Puedes agregar más campos si necesitas (imagen, descripción, etc.)
+      
     });
   }
 

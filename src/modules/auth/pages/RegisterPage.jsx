@@ -7,7 +7,6 @@ function RegisterPage() {
       flex-col
       justify-center
       min-h-screen
-      bg-neutral-100
       sm:items-center
       py-8
       px-4
