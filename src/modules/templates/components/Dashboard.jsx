@@ -54,7 +54,7 @@ function Dashboard() {
           sm:col-span-2
         "
       >
-        <span>Mi Dashboard</span>
+        <span>Home Administrador</span>
         {renderLogoutButton()}
         <button
           className="
@@ -92,7 +92,8 @@ function Dashboard() {
           >
             <li>
               <NavLink
-                to='/admin/home'
+                to='/admin'
+                end
                 className={getLinkStyles}
               >Principal</NavLink>
             </li>

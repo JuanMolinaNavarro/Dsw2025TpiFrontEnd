@@ -6,9 +6,11 @@ function LoginPage() {
       flex
       flex-col
       justify-center
-      h-[100dvh]
-      bg-neutral-100
-      sm:items-center
+      min-h-screen
+      bg-gradient-to-br
+      from-blue-500
+      to-purple-600
+      items-center
     '>
       <LoginForm />
     </div>

@@ -23,27 +23,35 @@ function ListProductsPage() {
 
   const [loading, setLoading] = useState(false);
 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await getProducts(searchTerm, status, pageNumber, pageSize);
+ const fetchProducts = async () => {
+  try {
+    setLoading(true);
+    const { data, error } = await getProducts(searchTerm, status, pageNumber, pageSize);
 
-      if (error) throw error;
+    if (error) throw error;
 
-      setTotal(data.total);
-      setProducts(data.productItems);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    console.log("RESPONSE DATA (FULL):", JSON.stringify(data, null, 2));
+
+    setTotal(data.total ?? 0);
+    setProducts(data.productItems ?? []);
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
 
   useEffect(() => {
     fetchProducts();
   }, [status, pageSize, pageNumber]);
 
   const totalPages = Math.ceil(total / pageSize);
+  //const totalPages = Math.max(data?.totalPages ?? 1, 1);
+
 
   const handleSearch = async () => {
     await fetchProducts();
@@ -88,17 +96,24 @@ function ListProductsPage() {
       </Card>
 
       <div className='mt-4 flex flex-col gap-4'>
-        {
-          loading
-            ? <span>Buscando datos...</span>
-            : products.map(product => (
-              <Card key={product.sku}>
-                <h1>{product.sku} - {product.name}</h1>
-                <p className='text-base'>Stock: {product.stockQuantity} - ${product.currentUnitPrice} - {product.isActive ? 'Activado' : 'Desactivado'}</p>
-              </Card>
-            ))
-        }
-      </div>
+    {
+     loading
+      ? <span>Buscando datos...</span>
+      : products.map(product => {
+          console.log("PRODUCT:", product);
+
+          return (
+            <Card key={product.sku}>
+              <h1>{product.sku} - {product.name}</h1>
+              <p className='text-base'>
+                Stock: {product.stockQuantity} - ${product.currentUnitPrice} - {product.isActive ? 'Activado' : 'Desactivado'}
+              </p>
+            </Card>
+          );
+        })
+     }
+   </div>
+
 
       <div className='flex justify-center items-center mt-3'>
         <button
