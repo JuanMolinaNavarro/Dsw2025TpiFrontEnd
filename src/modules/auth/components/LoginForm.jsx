@@ -101,7 +101,7 @@ function LoginForm() {
       <div className='flex flex-col gap-2 items-center'>
         <p className='text-gray-600 text-sm'>¿No tienes cuenta?</p>
         <Link to='/signup' className='w-full'>
-          <Button type='button' className='w-full bg-gray-400 hover:bg-gray-500 text-black'>
+          <Button type='button' className='w-full bg-purple-200 hover:bg-purple-200 text-black'>
             Registrar Usuario
           </Button>
         </Link>

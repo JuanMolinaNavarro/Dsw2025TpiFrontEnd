@@ -1,13 +1,10 @@
 @import "tailwindcss";
 
 @layer base {
-
   body {
-  @apply m-0 text-base min-h-screen bg-gray-100;
-}
-
-#root {
-  @apply min-h-screen;
-}
-
+    @apply m-0 text-base h-[100dvh] bg-gray-100;
+  }
+  #root {
+    @apply h-[100dvh];
+  }
 }

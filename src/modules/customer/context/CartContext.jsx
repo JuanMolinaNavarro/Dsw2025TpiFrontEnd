@@ -34,6 +34,19 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
+  const [previousCustomerId, setPreviousCustomerId] = useState(customerId);
+
+  useEffect(() => {
+    // Si había un customerId y ahora es null = LOGOUT
+    if (previousCustomerId && !customerId) {
+      console.log('Usuario cerró sesión, limpiando carrito...');
+      clearCart();
+    }
+    
+    // Actualizar el valor anterior
+    setPreviousCustomerId(customerId);
+  }, [customerId]);
+
   const addToCart = (product, quantity = 1) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === product.id);
